@@ -1,0 +1,401 @@
+@import "tailwindcss";
+
+/*Peyda Font Family Persian Number Version*/
+@layer base {
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXThin.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXThin.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXThin.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXUltraLight.woff2")
+        format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXUltraLight.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXUltraLight.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXLight.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXLight.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXLight.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXRegular.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXRegular.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXRegular.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXMedium.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXMedium.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXMedium.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXDemiBold.woff2")
+        format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXDemiBold.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXDemiBold.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXBold.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXBold.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXBold.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXExtraBold.woff2")
+        format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXExtraBold.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXExtraBold.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "iransans";
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url("../../font/iransans/woff2/IRANSansXBlack.woff2") format("woff2"),
+      url("../../font/iransans/TTF/IRANSansXBlack.ttf") format("TrueType"),
+      url("../../font/iransans/woff/IRANSansXBlack.woff") format("woff");
+  }
+}
+
+@layer base {
+  body {
+    font-family: "iransans", sans-serif;
+    font-feature-settings: "ss01" 1;
+    font-variant-ligatures: discretionary-ligatures;
+  }
+
+  svg {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+@theme {
+  --color-cynBgBase: #ffffff;
+  --color-cynWhite: #ffffff;
+  --color-cynYellow: #ffd000;
+  --color-cynBlack: #212121;
+  --color-cynHover: #894608;
+  --color-cynBG: #ffffff;
+  --color-cynRed: #ef1414;
+  --color-cynBorder: #cccccc;
+  --color-cynBlue: #2969ff;
+  --color-cynBgItem: #d2d2d2;
+}
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+.primary-btn {
+  @apply py-2 px-4 text-base font-medium bg-cynYellow text-cynBlack rounded-4xl border border-cynYellow hover:bg-cynWhite hover:text-cynBlack transition-all duration-300;
+}
+
+.secondary-btn {
+  @apply py-2 px-4 text-base font-medium bg-cynWhite text-cynBlack rounded-4xl border border-cynYellow hover:bg-cynYellow hover:text-cynWhite transition-all duration-300;
+}
+
+.btn-hover-small {
+  @apply relative py-1 px-1 text-cynBlack z-10;
+}
+
+.btn-hover-small::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto 0;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-cynYellow);
+  border-radius: 99px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.btn-hover-small:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-hover {
+  @apply relative py-3 px-5 text-2xl font-medium text-cynBlack;
+}
+
+.btn-hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto 0;
+  width: 56px;
+  height: 56px;
+  background-color: var(--color-cynYellow);
+  border-radius: 99px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.btn-hover:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.shadow-item {
+  box-shadow: 0px 4px 9px 0px #00000024;
+}
+
+.scrollbar {
+  scrollbar-width: none !important;
+}
+
+.scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  display: none !important;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+#breadcrumb {
+  scrollbar-width: none !important;
+}
+
+#breadcrumb nav::-webkit-scrollbar {
+  display: none !important;
+}
+
+#breadcrumb nav::-webkit-scrollbar-track {
+  display: none !important;
+}
+
+#breadcrumb nav::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+.mobile-menu-scroll {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.bg-linear-cart {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 54.66%,
+    rgba(0, 0, 0, 0.487619) 79.86%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/*-------mobile-menu---------*/
+#mobile-menu li {
+  position: relative;
+}
+
+#mobile-menu > li {
+  @apply w-full mx-auto;
+}
+
+#mobile-menu li a {
+  display: block;
+}
+
+#mobile-menu li ul {
+  display: none;
+  position: static;
+  width: 100%;
+  @apply gap-0.5 [&>li]:border-t [&>li]:border-[#F4F4F6] [&>li]:first:border-t-0 flex-col text-cynBlack [&_li_a]:flex [&_li_a]:py-3 [&_li_a]:w-full text-base font-semibold;
+}
+
+#mobile-menu .sub-menu-toggle {
+  display: none;
+  cursor: pointer;
+}
+
+#mobile-menu i {
+  float: left;
+  width: 100%;
+  text-align: left;
+  left: 0;
+  position: absolute;
+  z-index: 0;
+  line-height: 0;
+  font-style: normal;
+}
+
+#mobile-menu .menu-item-has-children > .sub-menu-toggle {
+  display: block;
+}
+
+/*-------main-menu---------*/
+#main-menu li {
+  position: relative;
+}
+
+#main-menu li ul {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid var(--color-cynYellow);
+  border-radius: 1.25rem;
+  transition: all 0.3s ease;
+  @apply [&>li]:border-t-2 [&>li]:border-[#F4F4F6] [&>li]:first:border-t-0;
+}
+
+#main-menu li ul li {
+  min-width: 12.5rem;
+}
+
+#main-menu li a {
+  display: block;
+  white-space: nowrap;
+}
+
+#main-menu li ul li a {
+  padding: 0.625rem;
+  display: block;
+}
+
+#main-menu li:hover > ul {
+  pointer-events: all;
+  opacity: 1;
+}
+
+#main-menu li ul li ul {
+  top: 0;
+  right: 100%;
+}
+
+#main-menu li ul li:hover > ul {
+  display: block;
+}
+
+#main-menu > li.menu-item-has-children a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#main-menu > li.menu-item-has-children > ul > li > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+#main-menu li.menu-item-has-children::after {
+  content: "";
+  position: absolute;
+  top: 90%;
+  left: 0;
+  right: -16px;
+  width: 16vw;
+  height: 40px;
+  z-index: 51;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#main-menu li.menu-item-has-children:hover::after {
+  pointer-events: auto;
+}
+
+#main-menu li.menu-item-has-children:hover li {
+  color: var(--color-cynBlack);
+}
+
+/* #main-menu > li:hover {
+  color: var(--color-cynYellow);
+} */
+
+#main-menu li li:hover {
+  color: var(--color-cynYellow) !important;
+}
+
+/*-------login-btn---------*/
+#login-btn::after {
+  content: "";
+  position: absolute;
+  top: 80%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 30px;
+  z-index: 51;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#login-btn:hover::after {
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .about-us div.plyr__controls {
+    padding-block-end: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-us div.plyr__controls {
+    padding-block-end: 24px;
+  }
+}

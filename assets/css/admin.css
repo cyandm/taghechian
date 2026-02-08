@@ -1,0 +1,12 @@
+/**
+ * Admin styles
+ * @package CyanTheme
+ */
+
+body.wp-core-ui *{
+    font-family: "iransans", sans-serif !important;
+}
+
+body.wp-customizer .accordion-section-title::after{
+    rotate: 180deg;
+}
