@@ -26,7 +26,7 @@ get_header();
         <div class="w-full lg:w-5/9 flex flex-col gap-5 justify-center">
 
             <div class="flex flex-col gap-2 max-lg:justify-center max-lg:text-center">
-                <p class="text-3xl md:text-[40px] font-normal">
+                <p class="text-3xl font-[Dinar]">
                     <?php echo $contact_title ? $contact_title : __('ارتباط با طاقه‌چیان', 'taghechian'); ?>
                 </p>
 
@@ -35,7 +35,7 @@ get_header();
                 </p>
             </div>
 
-            <form hx-post="<?php echo rest_url('cyn/v1/contact_form') ?>" hx-target=".result" hx-swap="innerHTML" hx-on::after-request="(function(ev){ var resultEl = document.querySelector('.result'); resultEl.style.display = 'block'; resultEl.style.opacity = '1'; if(ev.detail.successful){ resultEl.textContent = '<?php echo esc_js(__('با موفقیت ارسال شد', 'jonubgard')); ?>'; resultEl.style.background = ''; var f = document.getElementById('contact_form'); if(f) f.reset(); } else { try { var d = JSON.parse(ev.detail.xhr.responseText); resultEl.textContent = d.error || '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } catch(e){ resultEl.textContent = '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } resultEl.style.background = '#ef4444'; } setTimeout(function(){ resultEl.style.transition = 'opacity 0.5s ease-out'; resultEl.style.opacity = '0'; setTimeout(function(){ resultEl.style.display = 'none'; }, 500); }, 5000); })(event)" action="" method="post" id="contact_form" class="flex flex-col gap-4 w-5/6 max-lg:w-full [&_label]:w-full [&_input]:w-full [&_textarea]:w-full">
+            <form hx-post="<?php echo rest_url('cyn/v1/contact_form') ?>" hx-target=".result" hx-swap="innerHTML" hx-on::after-request="(function(ev){ var resultEl = document.querySelector('.result'); resultEl.style.display = 'block'; resultEl.style.opacity = '1'; if(ev.detail.successful){ resultEl.textContent = '<?php echo esc_js(__('با موفقیت ارسال شد', 'taghechian')); ?>'; resultEl.style.background = ''; var f = document.getElementById('contact_form'); if(f) f.reset(); } else { try { var d = JSON.parse(ev.detail.xhr.responseText); resultEl.textContent = d.error || '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } catch(e){ resultEl.textContent = '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } resultEl.style.background = '#ef4444'; } setTimeout(function(){ resultEl.style.transition = 'opacity 0.5s ease-out'; resultEl.style.opacity = '0'; setTimeout(function(){ resultEl.style.display = 'none'; }, 500); }, 5000); })(event)" action="" method="post" id="contact_form" class="flex flex-col gap-4 w-5/6 max-lg:w-full [&_label]:w-full [&_input]:w-full [&_textarea]:w-full">
 
                 <label for="fullname" class="relative">
                     <div class="size-6 text-cynBlack/60 absolute start-3 top-1/2 -translate-y-1/2">
@@ -89,7 +89,7 @@ get_header();
                         <span class="size-6 stroke-[1.5]">
                             <?php icon::print('Send') ?>
                         </span>
-                        <span class="pt-1">
+                        <span class="text-xl font-semibold">
                             <?php _e('ارسال پیام'); ?>
                         </span>
                     </button>
@@ -159,7 +159,7 @@ get_header();
 
                             <?php if ($branch_phone) : ?>
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'jonubgard'); ?></span>
+                                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'taghechian'); ?></span>
                                     <a href="tel:<?php echo $branch_phone ?>" class="text-cynBlue text-xs font-semibold"><?php echo $branch_phone ?></a>
                                 </div>
                             <?php endif; ?>
@@ -168,7 +168,7 @@ get_header();
 
                                 <div class="flex flex-col gap-3">
 
-                                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('آدرس روی نقشه', 'jonubgard'); ?></span>
+                                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('آدرس روی نقشه', 'taghechian'); ?></span>
 
                                     <ul class="flex items-center gap-2.5">
 

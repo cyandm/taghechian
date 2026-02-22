@@ -99,7 +99,7 @@ get_header(null, ['header_light' => true]);
                 </p>
             </div>
 
-            <form hx-post="<?php echo rest_url('cyn/v1/order_form') ?>" hx-target=".result" hx-swap="innerHTML" hx-on::after-request="(function(ev){ var resultEl = document.querySelector('.result'); resultEl.style.display = 'block'; resultEl.style.opacity = '1'; if(ev.detail.successful){ resultEl.textContent = '<?php echo esc_js(__('با موفقیت ارسال شد', 'jonubgard')); ?>'; resultEl.style.background = ''; var f = document.getElementById('order_form'); if(f) f.reset(); } else { try { var d = JSON.parse(ev.detail.xhr.responseText); resultEl.textContent = d.error || '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } catch(e){ resultEl.textContent = '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } resultEl.style.background = '#ef4444'; } setTimeout(function(){ resultEl.style.transition = 'opacity 0.5s ease-out'; resultEl.style.opacity = '0'; setTimeout(function(){ resultEl.style.display = 'none'; }, 500); }, 5000); })(event)" action="" method="post" id="order_form" class="flex flex-col gap-4 max-lg:w-full [&_label]:w-full [&_input]:w-full [&_textarea]:w-full">
+            <form hx-post="<?php echo rest_url('cyn/v1/order_form') ?>" hx-target=".result" hx-swap="innerHTML" hx-on::after-request="(function(ev){ var resultEl = document.querySelector('.result'); resultEl.style.display = 'block'; resultEl.style.opacity = '1'; if(ev.detail.successful){ resultEl.textContent = '<?php echo esc_js(__('با موفقیت ارسال شد', 'taghechian')); ?>'; resultEl.style.background = ''; var f = document.getElementById('order_form'); if(f) f.reset(); } else { try { var d = JSON.parse(ev.detail.xhr.responseText); resultEl.textContent = d.error || '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } catch(e){ resultEl.textContent = '<?php echo esc_js(__('خطا در ارسال', 'taghechian')); ?>'; } resultEl.style.background = '#ef4444'; } setTimeout(function(){ resultEl.style.transition = 'opacity 0.5s ease-out'; resultEl.style.opacity = '0'; setTimeout(function(){ resultEl.style.display = 'none'; }, 500); }, 5000); })(event)" action="" method="post" id="order_form" class="flex flex-col gap-4 max-lg:w-full [&_label]:w-full [&_input]:w-full [&_textarea]:w-full">
 
                 <label for="organization_name" class="relative">
                     <div class="size-6 text-cynBlack/60 absolute start-3 top-1/2 -translate-y-1/2">
@@ -161,7 +161,7 @@ get_header(null, ['header_light' => true]);
                         <span class="size-6 stroke-[1.5]">
                             <?php icon::print('Send') ?>
                         </span>
-                        <span class="pt-1">
+                        <span class="text-xl font-semibold">
                             <?php _e('ارسال درخواست'); ?>
                         </span>
                     </button>

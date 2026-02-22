@@ -89,21 +89,21 @@ for ($i = 1; $i <= 4; $i++) {
 
                 <?php if ($phone_number) : ?>
                     <div class="flex flex-col gap-1">
-                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'jonubgard'); ?></span>
+                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'taghechian'); ?></span>
                         <a href="tel:<?php echo $phone_number ?>" class="text-cynBlue text-xs font-semibold"><?php echo $phone_number ?></a>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($email_address) : ?>
                     <div class="flex flex-col gap-1">
-                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('ایمیل', 'jonubgard'); ?></span>
+                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('ایمیل', 'taghechian'); ?></span>
                         <a href="mailto:<?php echo $email_address ?>" class="text-cynBlue text-xs font-semibold"><?php echo $email_address ?></a>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($catalog_files) : ?>
                     <div class="flex flex-col gap-1">
-                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('دانلود کاتالوگ ها', 'jonubgard'); ?></span>
+                        <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('دانلود کاتالوگ ها', 'taghechian'); ?></span>
                         <?php foreach ($catalog_files as $catalog_file) : ?>
                             <a href="<?php echo $catalog_file['file'] ?>" target="_blank" class="text-cynBlue text-xs font-semibold flex items-center">
                                 <i class="size-5 flex items-center justify-center text-cynBlue">
@@ -122,7 +122,7 @@ for ($i = 1; $i <= 4; $i++) {
             <div class="lg:flex-2 max-lg:w-[calc(50%-2rem)] max-sm:w-full">
 
                 <div class="flex flex-col gap-1.5">
-                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('اطلاعات شعب', 'jonubgard'); ?></span>
+                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('اطلاعات شعب', 'taghechian'); ?></span>
 
                     <ul class="flex flex-col gap-4">
 
@@ -167,21 +167,21 @@ for ($i = 1; $i <= 4; $i++) {
 
                                     <?php if ($branch_phone) : ?>
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'jonubgard'); ?></span>
+                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شماره تماس', 'taghechian'); ?></span>
                                             <a href="tel:<?php echo $branch_phone ?>" class="text-cynBlue text-xs font-semibold"><?php echo $branch_phone ?></a>
                                         </div>
                                     <?php endif; ?>
 
                                     <?php if ($branch_loc_link_balad) : ?>
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('مکان یاب بلد', 'jonubgard'); ?></span>
+                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('مکان یاب بلد', 'taghechian'); ?></span>
                                             <a href="<?php echo $branch_loc_link_balad ?>" class="text-cynBlue text-xs font-semibold"><?php echo $branch_loc_link_balad ?></a>
                                         </div>
                                     <?php endif; ?>
 
                                     <?php if ($branch_loc_link_balad || $branch_loc_link_neshan || $branch_loc_link_snapp || $branch_loc_link_tapsi || $branch_loc_link_google || $branch_loc_link_waze) : ?>
                                         <div class="flex flex-col gap-3">
-                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('آدرس روی نقشه', 'jonubgard'); ?></span>
+                                            <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('آدرس روی نقشه', 'taghechian'); ?></span>
 
                                             <div class="flex items-center gap-2.5 flex-wrap">
 
@@ -254,7 +254,7 @@ for ($i = 1; $i <= 4; $i++) {
 
                 <div class="flex flex-col gap-1.5">
 
-                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شبکه های اجتماعی', 'jonubgard'); ?></span>
+                    <span class="text-xs font-semibold text-cynBlack whitespace-nowrap"><?php _e('شبکه های اجتماعی', 'taghechian'); ?></span>
 
                     <ul class="flex flex-col gap-3">
 
@@ -276,7 +276,7 @@ for ($i = 1; $i <= 4; $i++) {
                                         <i class="size-6 flex items-center justify-center text-cynBlack">
                                             <?php Icon::print('Instagram') ?>
                                         </i>
-                                        <span class="text-cynBlack text-xs font-medium"><?php _e('اینستاگرام ها', 'jonubgard'); ?></span>
+                                        <span class="text-cynBlack text-xs font-medium"><?php _e('اینستاگرام ها', 'taghechian'); ?></span>
                                     </div>
                                     <i class="size-5 [&_svg]:stroke-[1.5] flex items-center justify-center text-cynBlack">
                                         <?php Icon::print('Arrow-12') ?>
@@ -295,7 +295,7 @@ for ($i = 1; $i <= 4; $i++) {
 
                                         <div class="flex flex-col gap-4 text-cynBlack w-full">
 
-                                            <p class="text-2xl font-normal text-center"><?php _e('اینستاگرام ها', 'jonubgard') ?></p>
+                                            <p class="text-2xl font-normal text-center"><?php _e('اینستاگرام ها', 'taghechian') ?></p>
 
                                             <?php foreach ($instagram_accounts as $instagram_account) : ?>
 

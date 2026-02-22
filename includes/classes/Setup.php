@@ -23,8 +23,16 @@ class Setup
 
 		Register::init();
 
+		Search::init();
+
 		Rest::init();
 
 		Meta::init();
+
+		SingleGiftCard::init();
+
+		ProductAttributes::init();
+
+		WooCommerce::init();
 	}
 }

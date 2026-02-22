@@ -12,7 +12,7 @@ for ($i = 1; $i <= 4; $i++) {
 }
 ?>
 
-<section class="flex justify-between items-center w-full sm:hidden sm:pointer-events-none bg-white/50 backdrop-blur-sm py-2.5 px-5 fixed bottom-0 left-0 right-0">
+<section class="flex justify-between items-center w-full sm:hidden sm:pointer-events-none bg-white/50 backdrop-blur-sm py-2.5 px-5 fixed bottom-0 left-0 right-0 z-50">
 
     <?php foreach ($navbar_mobile as $navbar_mobile_item) : ?>
         <a href="<?php echo $navbar_mobile_item['link'] ?>" class="flex flex-col items-center gap-1 py-1 px-6 hover:bg-cynYellow active:bg-cynYellow rounded-lg transition-all duration-300">

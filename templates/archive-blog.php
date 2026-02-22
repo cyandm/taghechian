@@ -78,7 +78,7 @@ get_header();
     </section>
 
     <?php if ($fashion_posts_query->have_posts()): ?>
-        <section class="flex flex-col gap-5 my-14 relative">
+        <section class="flex flex-col gap-5 my-14">
 
             <?php if ($archive_blog_section_one_title && $archive_blog_section_one_under_title && $archive_blog_section_one_english_title && $archive_blog_section_one_english_under_title): ?>
                 <div class="container flex flex-col gap-2 max-lg:justify-center max-lg:text-center">
@@ -88,35 +88,37 @@ get_header();
             <?php endif; ?>
 
 
-            <swiper-container class="w-full relative" slides-per-view="1.15" breakpoints='{ "640":  { "slidesPerView": 1.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4 }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#decorNext" navigation-prev-el="#decorPrev">
-                <?php while ($decor_posts_query->have_posts()) : $decor_posts_query->the_post(); ?>
-                    <swiper-slide>
-                        <?php Templates::getCard('blog'); ?>
-                    </swiper-slide>
-                <?php endwhile; ?>
-            </swiper-container>
+            <div class="relative">
+                <swiper-container class="w-full relative" slides-per-view="1.25" centered-slides="true" breakpoints='{ "640":  { "slidesPerView": 2.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4, "centeredSlides": false }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#fashionNext" navigation-prev-el="#fashionPrev">
+                    <?php while ($fashion_posts_query->have_posts()) : $fashion_posts_query->the_post(); ?>
+                        <swiper-slide>
+                            <?php Templates::getCard('blog'); ?>
+                        </swiper-slide>
+                    <?php endwhile; ?>
+                </swiper-container>
 
-            <div class="flex justify-between items-center absolute top-3/5 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
+                <div class="flex justify-between items-center absolute top-1/2 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
 
-                <button id="decorPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Arrow,-Right') ?>
-                    </div>
-                </button>
+                    <button id="fashionPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Arrow,-Right') ?>
+                        </div>
+                    </button>
 
-                <button id="decorNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Left-1') ?>
-                    </div>
-                </button>
+                    <button id="fashionNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Left-1') ?>
+                        </div>
+                    </button>
 
+                </div>
             </div>
 
         </section>
     <?php endif; ?>
 
     <?php if ($decor_posts_query->have_posts()): ?>
-        <section class="flex flex-col gap-5 relative">
+        <section class="flex flex-col gap-5">
 
             <?php if ($archive_blog_section_two_title && $archive_blog_section_two_under_title && $archive_blog_section_two_english_title && $archive_blog_section_two_english_under_title): ?>
                 <div class="container flex flex-col gap-2 max-lg:justify-center max-lg:text-center">
@@ -125,30 +127,30 @@ get_header();
                 </div>
             <?php endif; ?>
 
+            <div class="relative">
+                <swiper-container class="w-full relative" slides-per-view="1.25" centered-slides="true" breakpoints='{ "640":  { "slidesPerView": 2.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4, "centeredSlides": false }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#decorNext" navigation-prev-el="#decorPrev">
+                    <?php while ($decor_posts_query->have_posts()) : $decor_posts_query->the_post(); ?>
+                        <swiper-slide>
+                            <?php Templates::getCard('blog'); ?>
+                        </swiper-slide>
+                    <?php endwhile; ?>
+                </swiper-container>
 
-            <swiper-container class="w-full relative" slides-per-view="1.15" breakpoints='{ "640":  { "slidesPerView": 1.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4 }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#newsNext" navigation-prev-el="#newsPrev">
-                <?php while ($fashion_posts_query->have_posts()) : $fashion_posts_query->the_post(); ?>
-                    <swiper-slide>
-                        <?php Templates::getCard('blog'); ?>
-                    </swiper-slide>
-                <?php endwhile; ?>
-            </swiper-container>
+                <div class="flex justify-between items-center absolute top-1/2 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
 
-            <div class="flex justify-between items-center absolute top-3/5 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
+                    <button id="decorPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Arrow,-Right') ?>
+                        </div>
+                    </button>
 
-                <button id="newsPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Arrow,-Right') ?>
-                    </div>
-                </button>
+                    <button id="decorNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Left-1') ?>
+                        </div>
+                    </button>
 
-                <button id="newsNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Left-1') ?>
-                    </div>
-                </button>
-
-            </div>
+                </div>
 
         </section>
     <?php endif; ?>
@@ -174,9 +176,11 @@ get_header();
             <div class="grid grid-cols-1 grid-rows-4 sm:grid-cols-12 sm:grid-rows-6 gap-4 sm:h-[488px]">
                 <?php foreach (array_slice($archive_show_images, 0, 4) as $i => $image): ?>
                     <div class="<?= $grid_classes[$i]; ?>">
-                        <?= wp_get_attachment_image($image, 'full', false, [
-                            'class' => 'w-full h-[352px] sm:h-full object-cover object-center'
-                        ]); ?>
+                        <a href="<?= esc_url(wp_get_attachment_image_url($image, 'full')); ?>" data-fancybox="archive-show-gallery" class="block w-full h-full cursor-pointer">
+                            <?= wp_get_attachment_image($image, 'full', false, [
+                                'class' => 'w-full h-[352px] sm:h-full object-cover object-center'
+                            ]); ?>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -185,7 +189,7 @@ get_header();
     <?php endif; ?>
 
     <?php if ($educational_posts_query->have_posts()): ?>
-        <section class="flex flex-col gap-5 relative">
+        <section class="flex flex-col gap-5">
 
             <?php if ($archive_blog_section_three_title && $archive_blog_section_three_under_title && $archive_blog_section_three_english_title && $archive_blog_section_three_english_under_title): ?>
                 <div class="container flex flex-col gap-2 max-lg:justify-center max-lg:text-center">
@@ -195,28 +199,30 @@ get_header();
             <?php endif; ?>
 
 
-            <swiper-container class="w-full relative" slides-per-view="1.15" breakpoints='{ "640":  { "slidesPerView": 1.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4 }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#educationalNext" navigation-prev-el="#educationalPrev">
-                <?php while ($educational_posts_query->have_posts()) : $educational_posts_query->the_post(); ?>
-                    <swiper-slide>
-                        <?php Templates::getCard('blog'); ?>
-                    </swiper-slide>
-                <?php endwhile; ?>
-            </swiper-container>
+            <div class="relative">
+                <swiper-container class="w-full relative" slides-per-view="1.25" centered-slides="true" breakpoints='{ "640":  { "slidesPerView": 2.15 }, "768":  { "slidesPerView": 2.15 }, "1024": { "slidesPerView": 3.25 }, "1280": { "slidesPerView": 4, "centeredSlides": false }}' loop="true" autoplay="true" pagination="false" navigation="true" navigation-next-el="#educationalNext" navigation-prev-el="#educationalPrev">
+                    <?php while ($educational_posts_query->have_posts()) : $educational_posts_query->the_post(); ?>
+                        <swiper-slide>
+                            <?php Templates::getCard('blog'); ?>
+                        </swiper-slide>
+                    <?php endwhile; ?>
+                </swiper-container>
 
-            <div class="flex justify-between items-center absolute top-3/5 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
+                <div class="flex justify-between items-center absolute top-1/2 -translate-y-1/2 left-0 right-0 px-2 pointer-events-none z-10">
 
-                <button id="educationalPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Arrow,-Right') ?>
-                    </div>
-                </button>
+                    <button id="educationalPrev" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Arrow,-Right') ?>
+                        </div>
+                    </button>
 
-                <button id="educationalNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
-                    <div class="text-white size-5">
-                        <?php icon::print('Left-1') ?>
-                    </div>
-                </button>
+                    <button id="educationalNext" class="bg-cynBlack p-3 cursor-pointer rounded-full pointer-events-auto">
+                        <div class="text-white size-5">
+                            <?php icon::print('Left-1') ?>
+                        </div>
+                    </button>
 
+                </div>
             </div>
 
         </section>

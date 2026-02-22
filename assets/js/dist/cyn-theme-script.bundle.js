@@ -23689,6 +23689,68 @@
     });
   }
 
+  // assets/js/functions/accordion.js
+  function Accordion() {
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+    if (!accordionButtons.length) return;
+    accordionButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId = button.getAttribute("data-accordion-target");
+        const content = document.querySelector(
+          '[data-accordion-content="'.concat(targetId, '"]')
+        );
+        const icon = button.querySelector(".accordion-icon");
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        if (!content) return;
+        button.setAttribute("aria-expanded", !isExpanded);
+        const iconRotate = button.getAttribute("data-accordion-icon-rotate") || "45";
+        if (isExpanded) {
+          content.style.gridTemplateRows = "0fr";
+          if (icon) {
+            icon.style.transform = "rotate(0deg)";
+          }
+          content.classList.remove("mt-3");
+        } else {
+          content.style.gridTemplateRows = "1fr";
+          if (icon) {
+            icon.style.transform = "rotate(".concat(iconRotate, "deg)");
+          }
+          content.classList.add("mt-3");
+        }
+      });
+    });
+  }
+
+  // assets/js/functions/search.js
+  function SearchPage() {
+    const searchForm = document.querySelector("form#search-form");
+    if (!searchForm) return;
+    const filterRadios = searchForm.querySelectorAll('input[name="search-type"]');
+    filterRadios.forEach((radio) => {
+      radio.addEventListener("change", () => {
+        searchForm.submit();
+      });
+    });
+  }
+
+  // assets/js/functions/instockToggle.js
+  function InstockToggle() {
+    document.querySelectorAll(".shop-sidebar [data-instock-toggle]").forEach((btn) => {
+      btn.addEventListener("click", function() {
+        const on2 = this.getAttribute("aria-checked") !== "true";
+        this.setAttribute("aria-checked", on2 ? "true" : "false");
+        this.classList.toggle("is-on", on2);
+        const url = new URL(window.location.href);
+        if (on2) {
+          url.searchParams.set("instock", "1");
+        } else {
+          url.searchParams.delete("instock");
+        }
+        window.location.href = url.toString();
+      });
+    });
+  }
+
   // assets/js/index.js
   Modals();
   register();
@@ -23701,6 +23763,9 @@
   videoCover();
   fancybox();
   shareBtn();
+  Accordion();
+  SearchPage();
+  InstockToggle();
 })();
 /*! Bundled license information:
 

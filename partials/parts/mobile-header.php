@@ -19,7 +19,7 @@ $logo_mobile_menu = get_option('logo_mobile_menu');
 
 	<div class="flex justify-between items-center">
 
-		<div class="size-8 flex justify-center items-center text-cynBlue" modal-closer data-modal-name="menu-modal">
+		<div class="size-8 flex justify-center items-center text-cynBlack" modal-closer data-modal-name="menu-modal">
 			<?php Icon::print('Arrow,-Forward'); ?>
 		</div>
 

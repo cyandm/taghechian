@@ -68,9 +68,12 @@ class Register
 
 	public static function registerTaxonomy()
 	{
-		self::makeTaxonomy('faq_cat', 'دسته بندی', 'دسته بندی ها', ['faq'], true);
 		self::makeTaxonomy('faq_cat', 'دسته سوالات ', 'دسته ها', ['faq']);
 		self::makeTaxonomy('faq_place', 'مکان نمایش ', 'مکان ها', ['faq']);
+		self::makeTaxonomy('product_gender', 'جنسیت محصولات', 'جنسیت ها', ['product'], true);
+		self::makeTaxonomy('product_poet', 'شاعر محصولات', 'شاعر ها', ['product'], true);
+		self::makeTaxonomy('product_collection', 'کالکشن محصولات', 'کالکشن ها', ['product'], true);
+		self::makeTaxonomy('product_side', 'نوع محصولات', 'نوع ها (یک رو و دو رو)', ['product'], true);
 	}
 
 	/**

@@ -74,7 +74,7 @@ $header_light_class = 'md:absolute md:!w-full md:[&_a]:text-white md:[&_li_ul_a]
 			<div class="relative flex justify-center group" id="login-btn">
 				<a href="<?= !is_user_logged_in() ? get_site_url() . '/login' : '#' ?>" class="flex items-center justify-center gap-1 text-cynBlack bg-white py-2.5 md:py-1.5 ps-4 pe-3 rounded-2xl text-xs font-medium border border-cynYellow group-hover:border-cynYellow transition-all duration-300">
 
-					<span class="whitespace-nowrap !text-cynBlack"><?= is_user_logged_in() ? esc_html(wp_get_current_user()->display_name) : __('ورود/ثبت نام', 'jonubgard'); ?></span>
+					<span class="whitespace-nowrap !text-cynBlack"><?= is_user_logged_in() ? esc_html(wp_get_current_user()->display_name) : __('ورود/ثبت نام', 'taghechian'); ?></span>
 
 					<?php if (is_user_logged_in()): ?>
 						<i class="size-6 [&_svg]:stroke-[1.5] !text-cynBlack group-hover:text-cynYellow group-hover:rotate-180 transition-all duration-300">

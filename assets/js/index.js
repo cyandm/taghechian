@@ -14,6 +14,9 @@ import { VideoPlyr } from "./modules/plyr";
 import fancybox from "./modules/fancybox";
 import { shareBtn } from "./functions/shareBtn";
 import { SwiperEmptySlide } from "./functions/swiperEmptySlide";
+import { Accordion } from "./functions/accordion";
+import { SearchPage } from "./functions/search";
+import { InstockToggle } from "./functions/instockToggle";
 
 Modals();
 register();
@@ -27,3 +30,6 @@ videoCover();
 fancybox();
 shareBtn();
 //SwiperEmptySlide();
+Accordion();
+SearchPage();
+InstockToggle();

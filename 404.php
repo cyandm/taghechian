@@ -17,13 +17,13 @@ Description: A template for displaying a 404 error page.
 
 
 		<p class="text-xl font-semibold text-cynBlack mt-6">
-			<?php _e('متاسفانه صفحه مورد نظر یافت نشد', 'jonubgard'); ?>
+			<?php _e('متاسفانه صفحه مورد نظر یافت نشد', 'taghechian'); ?>
 		</p>
 
 
 		<div class="mt-8 flex justify-center">
 			<a href="/" class="w-full max-w-xs sm:w-auto py-3 px-10 bg-cynYellow rounded-[20px] text-cynBlack text-center block">
-				<?php _e('بازگشت به صفحه اصلی', 'jonubgard'); ?>
+				<?php _e('بازگشت به صفحه اصلی', 'taghechian'); ?>
 			</a>
 		</div>
 

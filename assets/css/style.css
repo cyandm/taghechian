@@ -1,106 +1,124 @@
 @import "tailwindcss";
 
-/*Peyda Font Family Persian Number Version*/
 @layer base {
   @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 100;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXThin.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXThin.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXThin.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-Thin.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Thin.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Thin.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 200;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXUltraLight.woff2")
+    src: url("../../font/iransans/woff/IRANSansX-UltraLight.woff")
+        format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-UltraLight.woff2")
         format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXUltraLight.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXUltraLight.woff") format("woff");
+      url("../../font/iransans/ttf/IRANSansX-UltraLight.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 300;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXLight.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXLight.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXLight.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-Light.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Light.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Light.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXRegular.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXRegular.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXRegular.woff") format("woff");
-  }
-
-  @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 500;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXMedium.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXMedium.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXMedium.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-Medium.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Medium.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Medium.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 600;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXDemiBold.woff2")
-        format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXDemiBold.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXDemiBold.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-DemiBold.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-DemiBold.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-DemiBold.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXBold.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXBold.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXBold.woff") format("woff");
-  }
-
-  @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 800;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXExtraBold.woff2")
-        format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXExtraBold.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXExtraBold.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-ExtraBold.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-ExtraBold.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-ExtraBold.ttf") format("ttf");
   }
 
   @font-face {
-    font-family: "iransans";
+    font-family: "IRANSansX";
     font-style: normal;
     font-weight: 900;
-    font-display: swap;
-    src: url("../../font/iransans/woff2/IRANSansXBlack.woff2") format("woff2"),
-      url("../../font/iransans/TTF/IRANSansXBlack.ttf") format("TrueType"),
-      url("../../font/iransans/woff/IRANSansXBlack.woff") format("woff");
+    src: url("../../font/iransans/woff/IRANSansX-Black.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Black.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Black.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "IRANSansX";
+    font-style: normal;
+    font-weight: 950;
+    src: url("../../font/iransans/woff/IRANSansX-ExtraBlack.woff")
+        format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-ExtraBlack.woff2")
+        format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-ExtraBlack.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "IRANSansX";
+    font-style: normal;
+    font-weight: 1000;
+    src: url("../../font/iransans/woff/IRANSansX-Heavy.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Heavy.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Heavy.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "IRANSansX";
+    font-style: normal;
+    font-weight: bold;
+    src: url("../../font/iransans/woff/IRANSansX-Bold.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Bold.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Bold.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "IRANSansX";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../../font/iransans/woff/IRANSansX-Regular.woff") format("woff"),
+      url("../../font/iransans/woff2/IRANSansX-Regular.woff2") format("woff2"),
+      url("../../font/iransans/ttf/IRANSansX-Regular.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "Dinar";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../../font/dinar/woff/Dinar_Medium.woff") format("woff"),
+      url("../../font/dinar/woff2/Dinar_Medium.woff2") format("woff2"),
+      url("../../font/dinar/ttf/Dinar_Medium.ttf") format("ttf");
   }
 }
 
 @layer base {
   body {
-    font-family: "iransans", sans-serif;
-    font-feature-settings: "ss01" 1;
-    font-variant-ligatures: discretionary-ligatures;
+    font-family: "IRANSansX", sans-serif;
+    font-feature-settings: "ss01";
+    font-variant-ligatures: none;
   }
 
   svg {
@@ -399,3 +417,94 @@ a {
     padding-block-end: 24px;
   }
 }
+
+/* Single product gift card - gallery rounded, RTL layout */
+.single-product-gift-card__price .woocommerce-Price-amount {
+  font-family: var(--font-dinar, "Dinar", inherit);
+}
+
+/* Gift card gallery: thumbs + main swiper */
+.single-product-gift-card__gallery .gift-card-gallery-thumbs {
+  min-height: 80px;
+}
+@media (min-width: 768px) {
+  .single-product-gift-card__gallery .gift-card-gallery-thumbs {
+    min-height: 200px;
+    max-height: 320px;
+  }
+}
+.single-product-gift-card__gallery .gift-card-gallery-thumbs .swiper-slide-thumb-active {
+  opacity: 1;
+  border-color: var(--cynOrange, #efa114) !important;
+}
+.single-product-gift-card__gallery .gift-card-gallery-thumbs swiper-slide {
+  opacity: 0.6;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.single-product-gift-card__gallery .gift-card-gallery-thumbs swiper-slide:hover {
+  opacity: 1;
+}
+
+/* سایدبار فروشگاه – سوئیچ: غیرفعال چپ، فعال راست */
+.shop-sidebar .instock-toggle-btn {
+  background-color: #d1d5db;
+}
+/* LTR: غیرفعال = چپ (۰)، فعال = راست (۱.۲۵rem) */
+.shop-sidebar .instock-toggle-btn [data-toggle-knob] {
+  transform: translateX(0);
+}
+.shop-sidebar .instock-toggle-btn.is-on {
+  background-color: #22c55e;
+}
+.shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
+  transform: translateX(1.25rem);
+}
+/* RTL: غیرفعال = چپ (-1.25rem)، فعال = راست (۰) */
+html[dir="rtl"] .shop-sidebar .instock-toggle-btn [data-toggle-knob] {
+  transform: translateX(-1.25rem);
+}
+html[dir="rtl"] .shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
+  transform: translateX(0);
+}
+
+/* Price filter slider (shop sidebar) */
+.shop-sidebar .price_slider_wrapper .price_slider.ui-slider {
+  position: relative;
+  height: 6px;
+  margin: 0.75rem 0;
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+.shop-sidebar .price_slider.ui-slider .ui-slider-range {
+  position: absolute;
+  height: 100%;
+  background: #9ca3af;
+  border-radius: 3px;
+}
+.shop-sidebar .price_slider.ui-slider .ui-slider-handle {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  background: #111827;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+}
+.shop-sidebar .price_slider.ui-slider .ui-slider-handle:focus {
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4);
+}
+
+/* Attribute filters: size buttons, color swatches (same as single product) */
+.shop-sidebar .filter-size .flex-wrap a {
+  text-decoration: none;
+}
+.shop-sidebar .filter-color .color-option {
+  text-decoration: none;
+}
+
