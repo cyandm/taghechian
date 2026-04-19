@@ -17,6 +17,8 @@ import { SwiperEmptySlide } from "./functions/swiperEmptySlide";
 import { Accordion } from "./functions/accordion";
 import { SearchPage } from "./functions/search";
 import { InstockToggle } from "./functions/instockToggle";
+import { Countdown } from "./modules/countdown";
+import { ProductVariation } from "./functions/productVariation.js";
 
 Modals();
 register();
@@ -33,3 +35,5 @@ shareBtn();
 Accordion();
 SearchPage();
 InstockToggle();
+Countdown();
+ProductVariation();

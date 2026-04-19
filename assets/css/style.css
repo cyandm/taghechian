@@ -5,7 +5,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 100;
-    src: url("../../font/iransans/woff/IRANSansX-Thin.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Thin.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Thin.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Thin.ttf") format("ttf");
   }
@@ -14,8 +15,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 200;
-    src: url("../../font/iransans/woff/IRANSansX-UltraLight.woff")
-        format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-UltraLight.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-UltraLight.woff2")
         format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-UltraLight.ttf") format("ttf");
@@ -25,7 +26,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 300;
-    src: url("../../font/iransans/woff/IRANSansX-Light.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Light.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Light.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Light.ttf") format("ttf");
   }
@@ -34,7 +36,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 500;
-    src: url("../../font/iransans/woff/IRANSansX-Medium.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Medium.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Medium.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Medium.ttf") format("ttf");
   }
@@ -43,7 +46,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 600;
-    src: url("../../font/iransans/woff/IRANSansX-DemiBold.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-DemiBold.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-DemiBold.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-DemiBold.ttf") format("ttf");
   }
@@ -52,7 +56,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 800;
-    src: url("../../font/iransans/woff/IRANSansX-ExtraBold.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-ExtraBold.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-ExtraBold.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-ExtraBold.ttf") format("ttf");
   }
@@ -61,7 +66,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 900;
-    src: url("../../font/iransans/woff/IRANSansX-Black.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Black.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Black.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Black.ttf") format("ttf");
   }
@@ -70,8 +76,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 950;
-    src: url("../../font/iransans/woff/IRANSansX-ExtraBlack.woff")
-        format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-ExtraBlack.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-ExtraBlack.woff2")
         format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-ExtraBlack.ttf") format("ttf");
@@ -81,7 +87,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: 1000;
-    src: url("../../font/iransans/woff/IRANSansX-Heavy.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Heavy.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Heavy.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Heavy.ttf") format("ttf");
   }
@@ -90,7 +97,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: bold;
-    src: url("../../font/iransans/woff/IRANSansX-Bold.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Bold.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Bold.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Bold.ttf") format("ttf");
   }
@@ -99,7 +107,8 @@
     font-family: "IRANSansX";
     font-style: normal;
     font-weight: normal;
-    src: url("../../font/iransans/woff/IRANSansX-Regular.woff") format("woff"),
+    src:
+      url("../../font/iransans/woff/IRANSansX-Regular.woff") format("woff"),
       url("../../font/iransans/woff2/IRANSansX-Regular.woff2") format("woff2"),
       url("../../font/iransans/ttf/IRANSansX-Regular.ttf") format("ttf");
   }
@@ -108,10 +117,15 @@
     font-family: "Dinar";
     font-style: normal;
     font-weight: normal;
-    src: url("../../font/dinar/woff/Dinar_Medium.woff") format("woff"),
+    src:
+      url("../../font/dinar/woff/Dinar_Medium.woff") format("woff"),
       url("../../font/dinar/woff2/Dinar_Medium.woff2") format("woff2"),
       url("../../font/dinar/ttf/Dinar_Medium.ttf") format("ttf");
   }
+}
+
+.font-Dinar {
+  line-height: 1.5em !important;
 }
 
 @layer base {
@@ -433,7 +447,9 @@ a {
     max-height: 320px;
   }
 }
-.single-product-gift-card__gallery .gift-card-gallery-thumbs .swiper-slide-thumb-active {
+.single-product-gift-card__gallery
+  .gift-card-gallery-thumbs
+  .swiper-slide-thumb-active {
   opacity: 1;
   border-color: var(--cynOrange, #efa114) !important;
 }
@@ -442,9 +458,13 @@ a {
   border: 2px solid transparent;
   border-radius: 0.75rem;
   overflow: hidden;
-  transition: opacity 0.2s, border-color 0.2s;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s;
 }
-.single-product-gift-card__gallery .gift-card-gallery-thumbs swiper-slide:hover {
+.single-product-gift-card__gallery
+  .gift-card-gallery-thumbs
+  swiper-slide:hover {
   opacity: 1;
 }
 
@@ -508,3 +528,117 @@ html[dir="rtl"] .shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
   text-decoration: none;
 }
 
+/* Sales section flip countdown: dark cards, white digits (like design) */
+.flipclock-sales .flip-clock .flip-clock-card .flip-clock-card-item-inner .top,
+.flipclock-sales
+  .flip-clock
+  .flip-clock-card
+  .flip-clock-card-item-inner
+  .bottom {
+  background: #374151;
+  color: #fff;
+}
+.flipclock-sales .flip-clock .flip-clock-divider {
+  color: #374151;
+}
+.flipclock-sales .flip-clock .flip-clock-label {
+  display: none;
+}
+
+#flipclock-sales > .flip-clock > .flip-clock-group > .flip-clock-group-items {
+  display: flex !important;
+  gap: 0.625rem !important;
+  margin-left: unset !important;
+}
+
+.flip-clock-group-items .flip-clock-group {
+  margin-left: 0 !important;
+}
+
+.flip-clock-group-items .flip-clock-group .flip-clock-group-items {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+}
+
+/* ---------- Cart page (سبد خرید) ---------- */
+.cart-page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 1024px) {
+  .cart-page-grid {
+    grid-template-columns: 1fr 360px;
+  }
+  [dir="rtl"] .cart-page-grid .cart-totals-col {
+    order: -1;
+  }
+  [dir="rtl"] .cart-page-grid .cart-table-col {
+    order: 0;
+  }
+}
+
+.cart-table-taghechian thead th {
+  text-align: right;
+}
+.cart-table-taghechian .product-thumbnail,
+.cart-table-taghechian .product-price,
+.cart-table-taghechian .product-subtotal {
+  text-align: right;
+}
+
+/* Quantity input in cart: bordered box */
+.woocommerce-cart-form .quantity {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #f9fafb;
+}
+.woocommerce-cart-form .quantity .cart-qty-input,
+.woocommerce-cart-form .quantity input.qty {
+  width: 2.5rem;
+  min-height: 2.25rem;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-weight: 500;
+}
+.woocommerce-cart-form .product-quantity .flex {
+  flex-wrap: nowrap;
+}
+
+/* Cart totals: قابل پرداخت amount in blue */
+.cart-totals-payable td,
+.cart-totals-payable .woocommerce-Price-amount {
+  color: #2563eb !important;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.cart-totals-discount-row td,
+.cart-totals-discount-row .woocommerce-Price-amount {
+  color: #dc2626 !important;
+}
+
+/* Cross-sells: horizontal scroll, عنوان محصولات پیشنهادی */
+.cross-sells-taghechian ul.products {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  margin: 0;
+  list-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.cross-sells-taghechian ul.products li {
+  flex: 0 0 auto;
+  width: 180px;
+  margin: 0;
+}
+@media (min-width: 640px) {
+  .cross-sells-taghechian ul.products li {
+    width: 220px;
+  }
+}

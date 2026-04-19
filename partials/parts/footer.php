@@ -390,7 +390,7 @@ for ($i = 1; $i <= 4; $i++) {
 
 </section>
 
-<section class="container text-cynBlack text-base font-medium text-center mt-3">
+<section class="container text-cynBlack text-sm font-medium text-center mt-3">
     <p class="whitespace-nowrap [&>a]:text-cynBlue"><?php echo $developer_code; ?></p>
 </section>
 

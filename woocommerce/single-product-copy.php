@@ -470,9 +470,6 @@ get_header();
 						<div class="single_variation"></div>
 					</div>
 
-					<div id="variation-i18n" data-out-of-stock="ناموجود" data-only-left="فقط" data-items-left="عدد باقیمانده" hidden></div>
-
-
 					<input type="hidden" name="variation_id" class="variation_id" value="0" />
 					<input type="hidden" name="product_id" value="<?php echo absint($product->get_id()); ?>" />
 
@@ -649,6 +646,101 @@ get_header();
 
 </main>
 
+<?php if ($product->is_type('variable')) : ?>
+<script>
+(function() {
+	// Use WooCommerce variation form; we only sync our buttons to selects and update our custom price/stock UI from WC events
+	var $form = jQuery('.variations_form.cart');
+	if (!$form.length) return;
 
+	var $priceDisplay = jQuery('#product-price-display');
+	var $stockWrapper = jQuery('#stock-status-wrapper');
+	var $stockText = jQuery('#stock-status-text');
+	var initialPriceHtml = $priceDisplay.length ? $priceDisplay.html() : '';
+	var initialStockHtml = $stockWrapper.length ? $stockWrapper.html() : '';
+
+	function setSelectAndTrigger(attrName, value) {
+		var name = 'attribute_' + attrName;
+		var $sel = $form.find('select[name="' + name + '"]');
+		if ($sel.length && value) {
+			$sel.val(value);
+			$sel.trigger('change');
+			// Force WC to re-check so variation_id is set (in case change alone didn’t run full flow)
+			setTimeout(function() { $form.trigger('check_variations'); }, 0);
+		}
+	}
+
+	function setSelectValue(attrName, value) {
+		var name = 'attribute_' + attrName;
+		var $sel = $form.find('select[name="' + name + '"]');
+		if ($sel.length && value) $sel.val(value);
+	}
+
+	// Color buttons → update WC select and let WC set variation_id
+	jQuery(document).on('click', '.color-option', function() {
+		var attr = this.getAttribute('data-attribute');
+		var val = this.getAttribute('data-color');
+		if (!attr || !val) return;
+		jQuery('.color-option').removeClass('active');
+		jQuery(this).addClass('active');
+		setSelectAndTrigger(attr, val);
+	});
+
+	// Size buttons → update WC select
+	jQuery(document).on('click', '.size-option', function() {
+		var attr = this.getAttribute('data-attribute');
+		var val = this.getAttribute('data-size');
+		if (!attr || !val) return;
+		jQuery('.size-option').removeClass('active');
+		jQuery(this).addClass('active');
+		setSelectAndTrigger(attr, val);
+	});
+
+	// When WooCommerce finds a variation, update our custom price/stock UI
+	$form.on('found_variation', function(evt, variation) {
+		if (variation.price_html && $priceDisplay.length) {
+			$priceDisplay.html(variation.is_in_stock ? variation.price_html : '<span class="text-[#dd4a4a] text-lg"><?php echo esc_js(__('ناموجود', 'taghechian')); ?></span>');
+		}
+		if ($stockWrapper.length && $stockText.length) {
+			if (!variation.is_in_stock) {
+				$stockText.text('<?php echo esc_js(__('ناموجود', 'taghechian')); ?>');
+				$stockWrapper.removeClass('hidden');
+			} else if (variation.max_qty != null && variation.max_qty <= 4 && variation.max_qty > 0) {
+				$stockText.text('<?php echo esc_js(__('فقط', 'taghechian')); ?> ' + variation.max_qty + ' <?php echo esc_js(__('عدد باقیمانده', 'taghechian')); ?>');
+				$stockWrapper.removeClass('hidden');
+			} else {
+				$stockWrapper.addClass('hidden');
+			}
+		}
+	});
+
+	$form.on('hide_variation', function() {
+		if (initialPriceHtml && $priceDisplay.length) $priceDisplay.html(initialPriceHtml);
+		if (initialStockHtml && $stockWrapper.length) $stockWrapper.html(initialStockHtml);
+		$stockWrapper.addClass('hidden');
+	});
+
+	// On load: set ALL attribute selects first (no change trigger), then trigger check_variations once so WC finds the variation and enables the button
+	setTimeout(function() {
+		var selectsReady = false;
+		// Set first color
+		var $color = jQuery('.color-option').first();
+		if ($color.length && $color[0].dataset.attribute && $color[0].dataset.color) {
+			$color.addClass('active');
+			setSelectValue($color[0].dataset.attribute, $color[0].dataset.color);
+			selectsReady = true;
+		}
+		// Set first size
+		var $size = jQuery('.size-option').first();
+		if ($size.length && $size[0].dataset.attribute && $size[0].dataset.size) {
+			$size.addClass('active');
+			setSelectValue($size[0].dataset.attribute, $size[0].dataset.size);
+			selectsReady = true;
+		}
+		if (selectsReady) $form.trigger('check_variations');
+	}, 200);
+})();
+</script>
+<?php endif; ?>
 
 <?php get_footer(); ?>

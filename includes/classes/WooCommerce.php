@@ -46,6 +46,21 @@ class WooCommerce
         add_action('widgets_init', [__CLASS__, 'registerShopSidebar']);
 
         self::archiveProduct();
+
+        // Cart page: custom layout (totals output in cart.php), custom proceed button
+        remove_action('woocommerce_cart_collaterals', 'woocommerce_cart_totals', 10);
+        remove_action('woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20);
+        add_action('woocommerce_proceed_to_checkout', [__CLASS__, 'cartProceedButton'], 20);
+        add_filter('woocommerce_product_cross_sells_products_heading', [__CLASS__, 'crossSellsHeading']);
+
+        // Clear variation transient cache when products/variations are saved so get_available_variations() never returns stale data
+        add_action('woocommerce_update_product', [__CLASS__, 'clearVariableProductTransients']);
+        add_action('woocommerce_update_product_variation', [__CLASS__, 'clearVariableProductTransientsFromVariation']);
+        add_action('save_post_product', [__CLASS__, 'clearVariableProductTransientsOnSavePost'], 10, 3);
+        add_action('save_post_product_variation', [__CLASS__, 'clearVariableProductTransientsOnSaveVariation'], 10, 3);
+
+        // Manual clear of variation cache: open product URL with ?wc_clear_variations=1 (admins) to fix wrong cached data
+        add_action('template_redirect', [__CLASS__, 'maybeClearVariationsOnView'], 5);
     }
 
     /**
@@ -56,6 +71,110 @@ class WooCommerce
     public static function shopPerPage()
     {
         return 20;
+    }
+
+    /**
+     * Cart proceed to checkout button (تایید و تکمیل سفارش)
+     */
+    public static function cartProceedButton()
+    {
+        echo '<a href="' . esc_url(wc_get_checkout_url()) . '" class="primary-btn wc-forward block w-full text-center py-3 rounded-xl">' . esc_html__('تایید و تکمیل سفارش', 'taghechian') . '</a>';
+    }
+
+    /**
+     * Cross-sells section heading on cart page (محصولات پیشنهادی)
+     *
+     * @param string $heading
+     * @return string
+     */
+    public static function crossSellsHeading($heading)
+    {
+        return __('محصولات پیشنهادی', 'taghechian');
+    }
+
+    /**
+     * Clear variable product transients when product is updated so get_available_variations() is fresh.
+     */
+    public static function clearVariableProductTransients($product_id)
+    {
+        $product = wc_get_product($product_id);
+        if ($product && $product->is_type('variable')) {
+            wc_delete_product_transients($product_id);
+        }
+    }
+
+    /**
+     * Clear parent variable product transients when a variation is updated.
+     */
+    public static function clearVariableProductTransientsFromVariation($variation_id)
+    {
+        $variation = wc_get_product($variation_id);
+        if ($variation && $variation->get_parent_id()) {
+            wc_delete_product_transients($variation->get_parent_id());
+        }
+    }
+
+    /**
+     * When any product is saved (including from bulk edit, REST, etc.), clear variable product transients
+     * so variation data is never stale or from another product.
+     *
+     * @param int      $post_id
+     * @param \WP_Post $post
+     * @param bool     $update
+     */
+    public static function clearVariableProductTransientsOnSavePost($post_id, $post, $update)
+    {
+        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+            return;
+        }
+        if ($post->post_type === 'product_variation') {
+            $parent_id = wp_get_post_parent_id($post_id);
+            if ($parent_id) {
+                wc_delete_product_transients($parent_id);
+            }
+        }
+        $product = wc_get_product($post_id);
+        if ($product && $product->is_type('variable')) {
+            wc_delete_product_transients($post_id);
+        }
+    }
+
+    /**
+     * When a variation is saved (save_post), clear parent product transients.
+     *
+     * @param int      $post_id
+     * @param \WP_Post $post
+     * @param bool     $update
+     */
+    public static function clearVariableProductTransientsOnSaveVariation($post_id, $post, $update)
+    {
+        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+            return;
+        }
+        $parent_id = wp_get_post_parent_id($post_id);
+        if ($parent_id) {
+            wc_delete_product_transients($parent_id);
+        }
+    }
+
+    /**
+     * Clear variable product transients on single product when ?wc_clear_variations=1 (admins only).
+     * Open product URL with ?wc_clear_variations=1 once to fix wrong cached variation data, then reload.
+     */
+    public static function maybeClearVariationsOnView()
+    {
+        if (!isset($_GET['wc_clear_variations']) || $_GET['wc_clear_variations'] !== '1' || !is_singular('product')) {
+            return;
+        }
+        if (!current_user_can('manage_woocommerce') && !current_user_can('edit_products')) {
+            return;
+        }
+        $product_id = get_the_ID();
+        if ($product_id) {
+            wc_delete_product_transients($product_id);
+            wp_safe_redirect(remove_query_arg('wc_clear_variations'));
+            exit;
+        }
     }
 
     /**

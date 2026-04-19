@@ -34,6 +34,7 @@ class ACF
 	public static function registerAllACF()
 	{
 		self::forHome();
+		self::forSlider();
 		self::forBranches();
 		self::forContactUs();
 		self::forAboutUs();
@@ -50,16 +51,106 @@ class ACF
 		$acfGroup = new AcfGroup();
 
 		//add fields
-		$acfGroup->layoutFields->addTab('home_faq', 'سوالات متداول');
+		$acfGroup->layoutFields->addTab('home_faq', 'سوالات متداول (تنظیمات کلی سوالات متداول)');
 		$acfGroup->basicFields->addText('home_faq_title', 'عنوان سوالات متداول', ['placeholder' => 'سوالات متداول', 'width' => '50%']);
 		$acfGroup->basicFields->addText('home_faq_under_title', 'متن زیر عنوان سوالات متداول', ['placeholder' => 'متن زیر عنوان سوالات متداول', 'width' => '50%']);
 		$acfGroup->relationshipFields->addLink('home_faq_button', 'لینک و متن دکمه سوالات متداول (اگر این قسمت پر نشود شماره تلفن  پشتیبانی نمایش داده خواهد شد)', ['width' => '100%']);
+
+		$acfGroup->layoutFields->addTab('home_about_tab', 'درباره ما');
+		$acfGroup->basicFields->addText('home_about_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->contentFields->addTextEditor('home_about_description', 'توضیحات', ['width' => '50%']);
+		$acfGroup->contentFields->addFile('home_about_file', 'تصویر/ویدیو', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_about_cover', 'تصویر کاور ویدیو (اگر ویدیو انتخاب کرده اید لطفا این قسمت را تکمیل کنید)', ['width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_about_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_category_tab', 'دسته بندی ها');
+		$acfGroup->contentFields->addTaxonomy('home_product_cats', 'انتخاب دسته‌بندی‌های محصولات جهت نمایش', ['taxonomy' => 'product_cat', 'field_type' => 'multi_select', 'return_format' => 'id', 'width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_amazing_tab', 'شگفت چیان');
+		$acfGroup->basicFields->addText('home_amazing_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_amazing_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->advanceFields->addDateTimePicker('home_amazing_date_time', 'تاریخ و زمان نمایش محصولات شگفت چیان', ['display_format' => 'd/m/Y H:i', 'return_format' => 'YmdHis', 'width' => '50%']);
+		$acfGroup->choiceFields->addRadio('home_amazing_status', 'در صورت تمام شدن تایم مجددا تمدید شود؟ (در صورت خیر بعد از تمام شدن تایم سکشن نمایش داده نخواهد شد)', [
+			'choices' => ['yes' => 'بله', 'no' => 'خیر'],
+			'default_value' => 'no',
+			'layout' => 'horizontal',
+			'width' => '50%'
+		]);
+		$acfGroup->relationshipFields->addPostObject('home_amazing_post', 'انتخاب محصولات شگفت چیان (اگر محصولی انتخاب کنید دیگر از دسته بندی شگفت چیان محصولی نمایش داده نمیشود)', ['post_type' => 'product', 'multiple' => 1, 'width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_show_product_one_tab', 'نمایش محصول');
+		$acfGroup->basicFields->addText('home_show_product_one_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_show_product_one_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_show_product_one_image', 'تصویر', ['width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_show_product_one_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_double_banner_tab', 'بنر دوتایی');
+		$acfGroup->contentFields->addImage('home_double_banner_left_image', 'تصویر بنر چپ', ['width' => '50%']);
+		$acfGroup->basicFields->addUrl('home_double_banner_left_link', 'لینک', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_double_banner_right_image', 'تصویر بنر راست', ['width' => '50%']);
+		$acfGroup->basicFields->addUrl('home_double_banner_right_link', 'لینک', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_banner_tab', 'بنر');
+		$acfGroup->contentFields->addImage('home_banner_image_desktop', 'تصویر بنر برای دسکتاپ', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_banner_image_mobile', 'تصویر بنر برای موبایل', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_banner_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_banner_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_banner_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_show_product_two_tab', 'نمایش محصول');
+		$acfGroup->basicFields->addText('home_show_product_two_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_show_product_two_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_show_product_two_image', 'تصویر', ['width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_show_product_two_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_popular_products_tab', 'محصولات پرطرفدار');
+		$acfGroup->basicFields->addText('home_popular_products_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_popular_products_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->relationshipFields->addPostObject('home_popular_products_selected', 'انتخاب محصولات پرطرفدار', ['post_type' => 'product', 'multiple' => 1, 'width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_popular_products_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_show_product_three_tab', 'نمایش محصول');
+		$acfGroup->basicFields->addText('home_show_product_three_title', 'عنوان', ['width' => '50%']);
+		$acfGroup->basicFields->addText('home_show_product_three_under_title', 'متن زیر عنوان', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_show_product_three_image', 'تصویر', ['width' => '50%']);
+		$acfGroup->relationshipFields->addLink('home_show_product_three_button', 'لینک و متن دکمه', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_events_tab', 'رویدادها');
+		$acfGroup->basicFields->addText('home_events_title', 'عنوان', ['width' => '33%']);
+		$acfGroup->basicFields->addText('home_events_under_title', 'متن زیر عنوان', ['width' => '33%']);
+		$acfGroup->relationshipFields->addLink('home_events_button', 'لینک و متن دکمه', ['width' => '33%']);
+		$acfGroup->contentFields->addImage('home_events_image_desktop', 'تصویر بنر برای دسکتاپ', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('home_events_image_mobile', 'تصویر بنر برای موبایل', ['width' => '50%']);
+
+		$acfGroup->layoutFields->addTab('home_blogs_tab', 'بلاگ ها');
+		$acfGroup->relationshipFields->addPostObject('home_blogs_selected', 'انتخاب بلاگ ها (در صورتی که انتخاب نشوند جدیدترین ها نمایش داده میشود)', ['post_type' => 'post', 'multiple' => 1, 'width' => '100%']);
+
 
 		//location
 		$acfGroup->setLocation('page_template', '==', 'templates/home.php');
 
 		// register group
-		$acfGroup->register('Branch');
+		$acfGroup->register('Home-Page');
+	}
+
+	private static function forSlider()
+	{
+		//define helper
+		$acfGroup = new AcfGroup();
+
+		//add fields
+		$acfGroup->contentFields->addImage('desktop_slider', 'عکس اسلایدر برای دسکتاپ', ['width' => '50%']);
+		$acfGroup->contentFields->addImage('mobile_slider', 'عکس اسلایدر برای موبایل', ['width' => '50%']);
+		$acfGroup->basicFields->addText('url', 'لینک اسلایدر', [
+			'default_value' => '#',
+			'width' => '50%',
+		]);
+
+		//location
+		$acfGroup->setLocation('post_type', '==', 'slider');
+
+		// register group
+		$acfGroup->register('Slider');
 	}
 
 	private static function forBranches()

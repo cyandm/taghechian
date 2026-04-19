@@ -64,6 +64,7 @@ class Register
 		self::makePostType('contact_form', 'فرم تماس با ما', 'فرم تماس با ما', 'dashicons-phone', ['title']);
 		self::makePostType('order_form', 'فرم سفارش', 'فرم سفارش', 'dashicons-cart', ['title']);
 		self::makePostType('faq', 'سوالات متداول', 'سوالات متداول', 'dashicons-editor-help', ['title', 'editor']);
+		self::makePostType('slider', 'اسلایدر', 'اسلایدر', 'dashicons-images-alt2', ['title']);
 	}
 
 	public static function registerTaxonomy()
@@ -74,6 +75,7 @@ class Register
 		self::makeTaxonomy('product_poet', 'شاعر محصولات', 'شاعر ها', ['product'], true);
 		self::makeTaxonomy('product_collection', 'کالکشن محصولات', 'کالکشن ها', ['product'], true);
 		self::makeTaxonomy('product_side', 'نوع محصولات', 'نوع ها (یک رو و دو رو)', ['product'], true);
+		self::makeTaxonomy('slider_place', 'مکان نمایش اسلایدر', 'مکان ها', ['slider'], false);
 	}
 
 	/**

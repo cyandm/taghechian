@@ -11,9 +11,9 @@ $header_light = apply_filters('cyan_header_light', (bool) ($GLOBALS['cyan_header
 $header_light_class = 'md:absolute md:!w-full md:[&_a]:text-white md:[&_li_ul_a]:duration-200 md:[&_li_ul_a]:transition-all md:[&_li_ul_a:hover]:text-cynYellow md:[&_span]:text-white md:[&_i]:text-white md:[&_li]:text-white md:[&_li:hover]:text-cynYellow md:[&_.sub-menu_a]:text-cynBlack md:[&_.sub-menu_li]:text-cynBlack md:[&_.header-dropdown_a]:text-cynBlack md:[&_.header-dropdown_span]:text-cynBlack';
 ?>
 
-<section id="desktop-header" class="container z-50 <?php echo $header_light ? $header_light_class : ''; ?>">
+<section id="desktop-header" class="z-50 <?php echo $header_light ? $header_light_class : ''; ?>">
 
-	<div class="flex justify-between items-center max-lg:[&>div]:flex-1 py-4 lg:py-8">
+	<div class="container flex justify-between items-center max-lg:[&>div]:flex-1 py-4 lg:py-8">
 
 		<div class="mobile-menu flex lg:hidden gap-2">
 			<div class="p-2.5 rounded-full text-cynBlack border border-[#ECECEC] cursor-pointer" modal-opener data-modal-name="menu-modal">
