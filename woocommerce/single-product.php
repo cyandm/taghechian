@@ -30,26 +30,13 @@ if (!$product) {
 	return;
 }
 
-// Get product average rating
-$average_rating = $product->get_average_rating(); // e.g. 4.2
-$review_count = $product->get_review_count(); // Number of reviews
-
-// Set default rating if no reviews
-if ($average_rating == 0) {
-	$average_rating = 5; // Or any default value you want
-}
-
-// Calculate full and half stars
-$full_stars = floor($average_rating); // Full stars
-$half_star = ($average_rating - $full_stars) * 100; // Half star percentage
-$empty_stars = 5 - ceil($average_rating); // Empty stars
-
 // Get featured image as fallback for video covers
 $featured_image_id = get_post_thumbnail_id(get_the_ID());
 
 $product_certificate = get_field('product_certificate', $product->get_id());
 $product_details = get_field('product_details', $product->get_id());
 $product_care = get_field('product_care', $product->get_id());
+$product_size_guide = get_field('product_size_guide', $product->get_id());
 
 // Get related products with smart logic
 $related_product_ids = [];
@@ -211,7 +198,7 @@ get_header();
 			<div class="flex flex-col gap-1">
 				<h1 class="text-3xl font-[Dinar] leading-14 text-cynBlack"><?php echo get_the_title(); ?></h1>
 
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-2 flex-wrap">
 					<?php
 					$categories = get_the_terms(get_the_ID(), 'product_cat');
 					if ($categories && !is_wp_error($categories)) :
@@ -221,7 +208,7 @@ get_header();
 								continue;
 							}
 					?>
-							<a href="<?php echo get_term_link($category); ?>" class="text-cynBlack text-xs font-medium py-1 px-3 rounded-md bg-cynBgItem/15">
+							<a href="<?php echo get_term_link($category); ?>" class="text-cynBlack text-xs font-medium py-1 px-3 rounded-md bg-cynBgItem/15 whitespace-nowrap">
 								<?php echo $category->name; ?>
 							</a>
 					<?php
@@ -236,7 +223,12 @@ get_header();
 			$is_in_stock = $product->is_in_stock();
 			?>
 
-			<div id="stock-status-wrapper" class="mt-3.5 [transition:opacity_0.3s_ease,transform_0.3s_ease] <?php echo (!$is_in_stock || ($stock_quantity !== null && $stock_quantity <= 4)) ? '' : 'hidden'; ?>">
+			<div
+				id="stock-status-wrapper"
+				class="mt-3.5 transition-all duration-300 ease-out
+         <?php echo (!$is_in_stock || ($stock_quantity !== null && $stock_quantity <= 4))
+				? 'opacity-100 translate-y-0'
+				: 'opacity-0 -translate-y-1 pointer-events-none'; ?>">
 				<div class="py-1 px-3 rounded-md bg-[#dd4a4a]/14 flex items-center justify-center w-fit">
 					<p class="text-[#dd4a4a] text-xs font-medium" id="stock-status-text">
 						<?php if (!$is_in_stock) : ?>
@@ -247,6 +239,7 @@ get_header();
 					</p>
 				</div>
 			</div>
+
 
 			<hr class="border-cynBgItem/30 h-px w-full my-5">
 
@@ -292,13 +285,54 @@ get_header();
 							<?php _e('انتخاب سایز', 'taghechian'); ?>
 						</p>
 
-						<div class="text-cynBlue flex items-center" id="sizeGuide">
-							<span class="text-xs font-normal">
-								<?php _e('راهنمای سایز', 'taghechian'); ?>
-							</span>
+						<?php if ($product_size_guide): ?>
 
-							<i class="size-4"><?php Icon::print('ruler-1'); ?></i>
-						</div>
+							<div class="text-cynBlue flex items-center" id="sizeGuide" modal-opener data-modal-name="size-guide-modal">
+								<span class="text-xs font-normal">
+									<?php _e('راهنمای سایز', 'taghechian'); ?>
+								</span>
+
+								<i class="size-4"><?php Icon::print('ruler-1'); ?></i>
+							</div>
+
+							<div class="container flex justify-center items-center h-fit top-1/2 -translate-y-1/2 fixed inset-0 z-50 opacity-0 pointer-events-none w-full md:!w-6/10 data-[active='true']:opacity-100 data-[active='true']:pointer-events-auto duration-500"
+								modal
+								data-modal-name="size-guide-modal"
+								data-active="false">
+
+								<div class="w-full px-6 pb-6 pt-8 bg-cynWhite rounded-3xl shadow-item flex flex-col gap-6 justify-center items-center relative border border-cynBlack/10">
+
+									<div class="absolute top-3 right-3 w-fit cursor-pointer flex items-center"
+										modal-closer
+										data-modal-name="size-guide-modal">
+
+										<i class="size-8 text-cynBlack"><?php Icon::print('Delete,-Disabled'); ?></i>
+										<span class="text-xs font-semibold pb-0.5">
+											<?php _e('بستن', 'taghechian'); ?>
+										</span>
+									</div>
+
+									<div class="flex flex-col gap-4 text-cynBlack w-full">
+
+										<p class="text-2xl font-normal text-center">
+											<?php _e('راهنمای سایز', 'taghechian'); ?>
+										</p>
+
+										<p class="text-sm font-light text-center">
+											<?php _e('برای انتخاب سایز مناسب، اندازه‌های خود را با جدول زیر مقایسه کنید.', 'taghechian'); ?>
+										</p>
+
+										<div class="w-full overflow-x-auto text-sm text-center transition-all [&_table]:w-full [&_table]:border-collapse [&_table]:rounded-xl [&_table]:overflow-hidden [&_th]:bg-[#ffd000] [&_th]:text-black [&_th]:font-semibold [&_th]:px-4 [&_th]:py-3 [&_th]:border [&_th]:border-gray-200 [&_td]:px-4 [&_td]:py-3 [&_td]:border [&_td]:border-gray-200 [&_tr:nth-child(even)]:bg-gray-50 [&_tr]:transition-colors [&_tr]:duration-200 [&_tr:hover]:bg-yellow-50">
+											<?= $product_size_guide ?>
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						<?php endif; ?>
 
 					</div>
 
@@ -482,7 +516,7 @@ get_header();
 								<i class="size-6 stroke-[1.5]"><?php Icon::print('Share-1'); ?></i>
 							</button>
 
-							<a href="<?php echo esc_url(get_comments_link()); ?>#reviews" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
+							<a href="#comments" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
 								<i class="size-6 stroke-[1.5]"><?php Icon::print('Messages,-Chat-18'); ?></i>
 							</a>
 
@@ -505,7 +539,7 @@ get_header();
 								<i class="size-6 stroke-[1.5]"><?php Icon::print('Share-1'); ?></i>
 							</button>
 
-							<a href="<?php echo esc_url(get_comments_link()); ?>#reviews" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
+							<a href="#comments" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
 								<i class="size-6 stroke-[1.5]"><?php Icon::print('Messages,-Chat-18'); ?></i>
 							</a>
 
@@ -529,7 +563,14 @@ get_header();
 					if ($comments_count == 0) {
 						_e('دیدگاهی برای این محصول ثبت نشده است', 'taghechian');
 					} else {
-						printf(__('%s دیدگاه برای این محصول', 'taghechian'), $comments_count);
+						$comments_link = '<a href="#reviews" class="text-cynBlue underline">'
+							. $comments_count . ' دیدگاه' .
+							'</a>';
+
+						printf(
+							__(' %s برای این محصول', 'taghechian'),
+							$comments_link
+						);
 					}
 					?>
 				</span>
@@ -615,6 +656,15 @@ get_header();
 
 	</section>
 
+	<section class="product-reviews mt-14">
+
+		<?php if (function_exists('comments_template')) {
+			comments_template('/woocommerce/single-product-reviews.php');
+		}
+		?>
+
+	</section>
+
 	<section class="mt-14 flex flex-col gap-3 md:gap-5">
 
 		<div class="max-md:text-center">
@@ -648,7 +698,5 @@ get_header();
 	</section>
 
 </main>
-
-
 
 <?php get_footer(); ?>

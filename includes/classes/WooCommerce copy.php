@@ -72,83 +72,7 @@ class WooCommerce
                 wp_enqueue_script('wc-add-to-cart-variation');
             }
         });
-
-        // Cart AJAX: enqueue params + handlers
-        add_action('wp_head', [__CLASS__, 'addCartAjaxParams']);
-        add_action('wp_ajax_update_cart_quantity', [__CLASS__, 'ajaxUpdateCartQuantity']);
-        add_action('wp_ajax_nopriv_update_cart_quantity', [__CLASS__, 'ajaxUpdateCartQuantity']);
     }
-
-    /**
-     * Enqueue AJAX parameters for cart page (inline script in <head>)
-     */
-    public static function addCartAjaxParams()
-    {
-        if (!is_cart()) {
-            return;
-        }
-?>
-        <script type="text/javascript">
-            var cart_ajax_params = {
-                ajax_url: '<?php echo admin_url('admin-ajax.php'); ?>',
-                nonce: '<?php echo wp_create_nonce('cart_update_nonce'); ?>'
-            };
-        </script>
-<?php
-    }
-
-    /**
-     * AJAX handler for updating cart quantity
-     */
-    public static function ajaxUpdateCartQuantity()
-    {
-        // Security check
-        if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'cart_update_nonce')) {
-            wp_send_json_error(array('message' => 'خطای امنیتی'));
-            return;
-        }
-
-        if (!isset($_POST['cart_key']) || !isset($_POST['quantity'])) {
-            wp_send_json_error(array('message' => 'داده‌های ناقص'));
-            return;
-        }
-
-        $cart_key = sanitize_text_field($_POST['cart_key']);
-        $quantity = intval($_POST['quantity']);
-
-        // Get cart
-        $cart = WC()->cart;
-
-        if ($quantity === 0) {
-            // Remove item
-            $cart->remove_cart_item($cart_key);
-
-            wp_send_json_success(array(
-                'removed' => true,
-                'cart_subtotal' => WC()->cart->get_cart_subtotal(),
-                'cart_total' => WC()->cart->get_total(),
-            ));
-            return;
-        }
-
-        // Update quantity
-        $cart->set_quantity($cart_key, $quantity, true);
-        $cart->calculate_totals();
-
-        // Get updated values
-        $cart_item = $cart->get_cart_item($cart_key);
-        $_product = $cart_item ? $cart_item['data'] : null;
-
-        $response = array(
-            'cart_subtotal' => WC()->cart->get_cart_subtotal(),
-            'cart_total' => WC()->cart->get_total(),
-            'item_subtotal' => $_product ? WC()->cart->get_product_subtotal($_product, $quantity) : '',
-        );
-
-        wp_send_json_success($response);
-    }
-
-    // ... بقیه متدهای کلاس بدون تغییر ...
 
     /**
      * Products per page on shop archive (enables pagination when more than one page).
@@ -389,6 +313,13 @@ class WooCommerce
     }
 
     /**
+     * Remove selected options from shop catalog orderby dropdown.
+     * Keys: menu_order, popularity, rating, date, price, price-desc, sale.
+     *
+     * @param array $options
+     * @return array
+     */
+    /**
      * Active archive filters for display as removable tags.
      *
      * @param string $base_url Base URL (shop or term).
@@ -518,6 +449,7 @@ class WooCommerce
             'date',       // newest
             'menu_order', // default
             'sale',       // sale products
+            // On xl, archive-product shows only price and price-desc in its own dropdown.
         ];
         foreach ($remove as $key) {
             unset($options[$key]);
@@ -534,6 +466,7 @@ class WooCommerce
      */
     public static function removeCheckoutFields($fields)
     {
+        // Fields to remove
         $fields_to_remove = [
             'billing_address_1',
             'billing_address_2',
@@ -542,12 +475,14 @@ class WooCommerce
             'billing_email',
         ];
 
+        // First, make fields non-required to avoid validation errors
         foreach ($fields_to_remove as $field_key) {
             if (isset($fields['billing'][$field_key])) {
                 $fields['billing'][$field_key]['required'] = false;
             }
         }
 
+        // Then remove the fields
         foreach ($fields_to_remove as $field_key) {
             if (isset($fields['billing'][$field_key])) {
                 unset($fields['billing'][$field_key]);
@@ -580,14 +515,17 @@ class WooCommerce
      */
     public static function addPlaceholders($fields)
     {
+        // Add placeholder for first name
         if (isset($fields['billing']['billing_first_name'])) {
             $fields['billing']['billing_first_name']['placeholder'] = __('نام', 'taghechian');
         }
 
+        // Add placeholder for last name
         if (isset($fields['billing']['billing_last_name'])) {
             $fields['billing']['billing_last_name']['placeholder'] = __('نام خانوادگی', 'taghechian');
         }
 
+        // Add placeholder for phone
         if (isset($fields['billing']['billing_phone'])) {
             $fields['billing']['billing_phone']['placeholder'] = __('شماره تلفن', 'taghechian');
         }
@@ -629,65 +567,107 @@ class WooCommerce
     public static function customizeCouponErrors($err, $err_code, $coupon)
     {
         switch ($err_code) {
-            case 100:
+            case 100: // INVALID_FILTERED
                 $err = '⚠️ کد تخفیف وارد شده معتبر نیست.';
                 break;
-            case 101:
+
+            case 101: // INVALID_REMOVED
                 $err = '❌ کد تخفیف معتبر نیست و حذف شد.';
                 break;
-            case 102:
+
+            case 102: // NOT_YOURS_REMOVED
                 $err = '🚫 این کد به حساب کاربری شما تعلق ندارد.';
                 break;
-            case 103:
+
+            case 103: // ALREADY_APPLIED
                 $err = '🔁 این کد تخفیف قبلاً اعمال شده است.';
                 break;
-            case 104:
+
+            case 104: // ALREADY_APPLIED_INDIV_USE_ONLY
                 $err = '⚠️ این کد فقط به صورت انفرادی قابل استفاده است. ابتدا سایر کدها را حذف کنید.';
                 break;
-            case 105:
+
+            case 105: // NOT_EXIST
                 $err = '❌ کد تخفیفی که وارد کردید وجود ندارد.';
                 break;
-            case 106:
+
+            case 106: // USAGE_LIMIT_REACHED
                 $err = '🚫 سقف استفاده از این کد تخفیف پر شده است.';
                 break;
-            case 107:
+
+            case 107: // EXPIRED
                 $err = '⏰ این کد تخفیف منقضی شده است.';
                 break;
-            case 108:
+
+            case 108: // MIN_SPEND_LIMIT_NOT_MET
                 $min_spend = $coupon->get_minimum_amount();
                 $err = '💰 برای استفاده از این کد باید حداقل ' . \wc_price($min_spend) . ' خرید کنید.';
                 break;
-            case 109:
+
+            case 109: // NOT_APPLICABLE
                 $err = '⚠️ این کد برای محصولات انتخاب‌شده قابل استفاده نیست.';
                 break;
-            case 110:
+
+            case 110: // NOT_VALID_SALE_ITEMS
                 $err = '❗ این کد روی کالاهای دارای تخفیف قابل استفاده نیست.';
                 break;
-            case 111:
+
+            case 111: // PLEASE_ENTER
                 $err = '🔤 لطفاً یک کد تخفیف وارد کنید.';
                 break;
-            case 112:
-                $err = '🔤 لطفاً یک کد تخفیف معتبر وارد کنید.';
+
+            case 112: // MAX_SPEND_LIMIT_MET
+                $max_spend = $coupon->get_maximum_amount();
+                $err = '💸 حداکثر مبلغ خرید برای این کد ' . \wc_price($max_spend) . ' است.';
+                break;
+
+            case 113: // EXCLUDED_PRODUCTS
+                $err = '🚫 برخی از محصولات شما شامل این کد تخفیف نمی‌شوند.';
+                break;
+
+            case 114: // EXCLUDED_CATEGORIES
+                $err = '📦 برخی از دسته‌بندی‌های انتخابی مشمول این کد تخفیف نیستند.';
+                break;
+
+            case 115: // USAGE_LIMIT_COUPON_STUCK
+            case 116: // USAGE_LIMIT_COUPON_STUCK_GUEST
+                $err = '⚠️ استفاده از این کد تخفیف به‌دلیل محدودیت تعداد استفاده، امکان‌پذیر نمی‌باشد.';
+                break;
+
+            default:
+                $err = '❗ خطایی در بررسی کد تخفیف رخ داده است.';
                 break;
         }
+
         return $err;
     }
 
     /**
-     * Remove WooCommerce breadcrumb
+     * Remove default WooCommerce breadcrumb
+     * Removes breadcrumb from all WooCommerce pages to use custom breadcrumb
      */
     public static function removeBreadcrumb()
     {
+        // Remove from main content area
         remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+
+        // Remove from single product page
+        add_action('woocommerce_before_single_product', function () {
+            remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+        }, 1);
+
+        // Remove from archive pages
+        add_action('woocommerce_before_shop_loop', function () {
+            remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+        }, 1);
     }
 
-    /**
-     * Product loop hooks
-     */
     public static function archiveProduct()
     {
-        remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
+        // remove results count
+        remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
 
-        remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+        // remove default sorting
+        remove_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30);
     }
 }

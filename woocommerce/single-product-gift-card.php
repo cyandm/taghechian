@@ -132,7 +132,7 @@ get_header(); ?>
                         <span class="text-base md:text-xl font-medium text-cynBlack"><?php _e('نام گیرنده', 'taghechian'); ?></span>
                         <span class="relative flex items-center">
                             <input type="text" name="gift_recipient_name" class="w-full h-12 md:h-14 pl-11 pr-10 border border-cynBorder rounded-2xl text-base font-medium text-cynBlack placeholder:text-cynBlack/50 outline-none transition-all duration-300 focus:border-cynBlack" placeholder="<?php echo esc_attr(__('نام شما', 'taghechian')); ?>" required />
-                            <i class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-cynBlack/50 size-6 stroke-[1.5]"><?php Icon::print('User,-Profile-7'); ?></i>
+                            <i class="absolute right-3 pointer-events-none text-cynBlack/50 size-6 stroke-[1.5]"><?php Icon::print('User,-Profile-7'); ?></i>
                         </span>
                     </label>
 
@@ -142,7 +142,7 @@ get_header(); ?>
                         <span class="text-base md:text-xl font-medium text-cynBlack"><?php _e('جمله ی شخص روی پاکت کارت', 'taghechian'); ?></span>
                         <span class="relative flex items-center">
                             <input type="text" name="gift_card_message" class="w-full h-12 md:h-14 pl-11 pr-10 border border-cynBorder rounded-2xl text-base font-medium text-cynBlack placeholder:text-cynBlack/50 outline-none transition-all duration-300 focus:border-cynBlack" placeholder="<?php echo esc_attr(__('نظر شما', 'taghechian')); ?>" required />
-                            <i class="absolute right-3 top-4 pointer-events-none text-cynBlack/50 size-6 stroke-[1.5]"><?php Icon::print('Chat,-Messages-1'); ?></i>
+                            <i class="absolute right-3 pointer-events-none text-cynBlack/50 size-6 stroke-[1.5]"><?php Icon::print('Chat,-Messages-1'); ?></i>
                         </span>
                     </label>
                 </div>
@@ -157,9 +157,7 @@ get_header(); ?>
                             <i class="size-6 stroke-[1.5]"><?php Icon::print('Share-1'); ?></i>
                         </button>
 
-
-
-                        <a href="<?php echo esc_url(get_comments_link()); ?>#reviews" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
+                        <a href="#comments" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('نظرات', 'taghechian')); ?>">
                             <i class="size-6 stroke-[1.5]"><?php Icon::print('Messages,-Chat-18'); ?></i>
                         </a>
 
@@ -175,7 +173,37 @@ get_header(); ?>
                     </button>
                 </div>
             </form>
+
+            <div class="text-cynBlack text-base font-medium -mt-1">
+                <span>
+                    <?php
+                    $comments_count = get_comments_number();
+                    if ($comments_count == 0) {
+                        _e('دیدگاهی برای این محصول ثبت نشده است', 'taghechian');
+                    } else {
+                        $comments_link = '<a href="#reviews" class="text-cynBlue underline">'
+                            . $comments_count . ' دیدگاه' .
+                            '</a>';
+
+                        printf(
+                            __(' %s برای این محصول', 'taghechian'),
+                            $comments_link
+                        );
+                    }
+                    ?>
+                </span>
+            </div>
+
         </div>
+
+    </section>
+
+    <section class="product-reviews mt-14">
+
+        <?php if (function_exists('comments_template')) {
+            comments_template('/woocommerce/single-product-reviews.php');
+        }
+        ?>
 
     </section>
 

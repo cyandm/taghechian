@@ -89,20 +89,20 @@ if (!$referer_url) {
 		<div class="w-full p-4 md:p-6 bg-cynWhite rounded-3xl shadow-item flex flex-col gap-6 justify-center items-center relative max-w-md">
 
 			<div class="flex flex-col gap-3 justify-center items-center">
-				<p class="text-xl font-bold text-center"><?php _e('ورود به حساب کاربری', 'jonubgard'); ?></p>
+				<p class="text-xl font-bold text-center"><?php _e('ورود به حساب کاربری', 'taghechian'); ?></p>
 				<p class="text-base font-medium text-cynBlack text-center">
-					<?php _e('برای ادامه ی فرایند رزرو ابتدا وارد حساب کاربری خود شوید', 'jonubgard'); ?>
+					<?php _e('برای ادامه ی فرایند رزرو ابتدا وارد حساب کاربری خود شوید', 'taghechian'); ?>
 				</p>
 			</div>
 
 			<div class="flex gap-3 justify-center w-full">
 
 				<a href="<?php echo esc_url($referer_url); ?>" class="w-full border border-cynOrange rounded-2xl py-3 px-2.5 text-xl font-medium text-cynOrange flex justify-center items-center hover:bg-cynOrange hover:text-cynWhite transition-all duration-300">
-					<?php _e('انصراف', 'jonubgard'); ?>
+					<?php _e('انصراف', 'taghechian'); ?>
 				</a>
 
 				<a href="<?php echo esc_url($login_url); ?>" class="secondary-btn w-full text-white text-center">
-					<?php _e('ورود / ثبت نام', 'jonubgard'); ?>
+					<?php _e('ورود / ثبت نام', 'taghechian'); ?>
 				</a>
 
 			</div>

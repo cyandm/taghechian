@@ -48,9 +48,9 @@ export function ProductReviews() {
         stars.forEach((star, index) => {
           if (index < value) {
             star.classList.remove("text-gray-300");
-            star.classList.add("text-cynOrange");
+            star.classList.add("text-[#ffe31e]");
           } else {
-            star.classList.remove("text-cynOrange");
+            star.classList.remove("text-[#ffe31e]");
             star.classList.add("text-gray-300");
           }
         });
@@ -60,9 +60,9 @@ export function ProductReviews() {
         stars.forEach((star, index) => {
           if (index < value) {
             star.classList.remove("text-gray-300");
-            star.classList.add("text-cynOrange");
+            star.classList.add("text-[#ffe31e]");
           } else {
-            star.classList.remove("text-cynOrange");
+            star.classList.remove("text-[#ffe31e]");
             star.classList.add("text-gray-300");
           }
         });

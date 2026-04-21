@@ -139,6 +139,10 @@
     width: inherit;
     height: inherit;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @theme {
@@ -147,11 +151,12 @@
   --color-cynYellow: #ffd000;
   --color-cynBlack: #212121;
   --color-cynHover: #894608;
-  --color-cynBG: #ffffff;
+  --color-cynBG: #fefefe;
   --color-cynRed: #ef1414;
   --color-cynBorder: #cccccc;
   --color-cynBlue: #2969ff;
   --color-cynBgItem: #d2d2d2;
+  --color-cynStars: #fecf00;
 }
 
 .container {
@@ -641,4 +646,16 @@ html[dir="rtl"] .shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
   .cross-sells-taghechian ul.products li {
     width: 220px;
   }
+}
+
+.single-product-page .single_variation_wrap,
+.single-product-page .single_variation,
+.single-product-page .woocommerce-variation-price,
+.single-product-page .woocommerce-variation-description,
+.single-product-page .woocommerce-variation-availability {
+  display: none !important;
+}
+
+#reviews #cancel-comment-reply-link {
+  @apply text-sm text-[#EFA114] cursor-pointer mt-3 mb-2 mr-2 font-medium block;
 }

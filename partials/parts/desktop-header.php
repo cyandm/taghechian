@@ -9,6 +9,7 @@ use Cyan\Theme\Helpers\Icon;
 
 $header_light = apply_filters('cyan_header_light', (bool) ($GLOBALS['cyan_header_light'] ?? false));
 $header_light_class = 'md:absolute md:!w-full md:[&_a]:text-white md:[&_li_ul_a]:duration-200 md:[&_li_ul_a]:transition-all md:[&_li_ul_a:hover]:text-cynYellow md:[&_span]:text-white md:[&_i]:text-white md:[&_li]:text-white md:[&_li:hover]:text-cynYellow md:[&_.sub-menu_a]:text-cynBlack md:[&_.sub-menu_li]:text-cynBlack md:[&_.header-dropdown_a]:text-cynBlack md:[&_.header-dropdown_span]:text-cynBlack';
+$cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
 ?>
 
 <section id="desktop-header" class="z-50 <?php echo $header_light ? $header_light_class : ''; ?>">
@@ -65,10 +66,15 @@ $header_light_class = 'md:absolute md:!w-full md:[&_a]:text-white md:[&_li_ul_a]
 				</i>
 			</a>
 
-			<a href="<?= get_site_url() . '/cart' ?>" class="hidden lg:flex size-10 items-center justify-center">
+			<a href="<?= get_site_url() . '/cart' ?>" class="hidden lg:flex size-10 items-center justify-center relative">
 				<i class="size-6 [&_svg]:stroke-[1.5] text-cynBlack">
 					<?php Icon::print('Shopping-Cart'); ?>
 				</i>
+				<?php if ($cart_count > 0): ?>
+					<span class="absolute top-0.5 right-0.5 bg-[#C315A5] text-white text-xs font-normal w-4 h-4 flex items-center justify-center rounded-full pt-px">
+						<?= $cart_count ?>
+					</span>
+				<?php endif; ?>
 			</a>
 
 			<div class="relative flex justify-center group" id="login-btn">

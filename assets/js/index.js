@@ -19,6 +19,8 @@ import { SearchPage } from "./functions/search";
 import { InstockToggle } from "./functions/instockToggle";
 import { Countdown } from "./modules/countdown";
 import { ProductVariation } from "./functions/productVariation.js";
+import { ProductReviews } from "./functions/productReviews.js";
+import { CartPage } from "./functions/cart";
 
 Modals();
 register();
@@ -37,3 +39,5 @@ SearchPage();
 InstockToggle();
 Countdown();
 ProductVariation();
+ProductReviews();
+CartPage();

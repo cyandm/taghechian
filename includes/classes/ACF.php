@@ -363,13 +363,16 @@ class ACF
 
 		//add fields
 		$acfGroup->layoutFields->addTab('product_certificate_tab', 'شناسنامه محصول');
-		$acfGroup->contentFields->addTextEditor('product_certificate', 'متن یا توضیحات شناسنامه محصول', ['width' => '50%', 'toolbar' => 'advanced']);
+		$acfGroup->contentFields->addTextEditor('product_certificate', 'متن یا توضیحات شناسنامه محصول', ['width' => '100%', 'toolbar' => 'advanced']);
 
 		$acfGroup->layoutFields->addTab('product_details_tab', 'جزئیات محصول');
-		$acfGroup->contentFields->addTextEditor('product_details', 'متن یا توضیحات جزئیات محصول', ['width' => '50%', 'toolbar' => 'advanced']);
+		$acfGroup->contentFields->addTextEditor('product_details', 'متن یا توضیحات جزئیات محصول', ['width' => '100%', 'toolbar' => 'advanced']);
 
 		$acfGroup->layoutFields->addTab('product_care_tab', 'نکات نگهداری');
-		$acfGroup->contentFields->addTextEditor('product_care', 'متن یا توضیحات نکات نگهداری', ['width' => '50%', 'toolbar' => 'advanced']);
+		$acfGroup->contentFields->addTextEditor('product_care', 'متن یا توضیحات نکات نگهداری', ['width' => '100%', 'toolbar' => 'advanced']);
+
+		$acfGroup->layoutFields->addTab('product_size_guide_tab', 'راهنمای سایز');
+		$acfGroup->contentFields->addTextEditor('product_size_guide', 'جدول راهنمای سایز', ['width' => '100%', 'toolbar' => 'advanced']);
 
 		$acfGroup->layoutFields->addTab('product_gift_card_tab', '(اگر محصول کارت هدیه است لطفا اینجا را تکمیل کنید) کارت هدیه');
 		$acfGroup->basicFields->addText('product_gift_card_expire', 'تاریخ استفاده', ['width' => '50%', 'placeholder' => 'تا یک سال پس از خرید']);

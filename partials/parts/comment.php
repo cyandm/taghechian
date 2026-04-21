@@ -51,7 +51,7 @@ function taghechian_blog_comment_callback($comment, $args, $depth)
                                 )));
                                 if ($reply_link) {
                                     // Replace <a> tag classes
-                                    $reply_link = str_replace('class="comment-reply-link"', 'class="comment-reply-link text-cynBlack/50 hover:text-cynOrange transition-colors size-5 inline-block"', $reply_link);
+                                    $reply_link = str_replace('class="comment-reply-link"', 'class="comment-reply-link text-cynBlack/50 hover:text-cynStars transition-colors size-5 inline-block"', $reply_link);
                                     echo $reply_link;
                                 }
                             endif; ?>

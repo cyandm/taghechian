@@ -14927,7 +14927,7 @@
       }
     }
   };
-  function fetch(url, responseType = "text", withCredentials = false) {
+  function fetch2(url, responseType = "text", withCredentials = false) {
     return new Promise((resolve, reject) => {
       try {
         const request = new XMLHttpRequest();
@@ -14987,7 +14987,7 @@
           update2(container, data.content);
         }
       }
-      fetch(url).then((result) => {
+      fetch2(url).then((result) => {
         if (is.empty(result)) {
           return;
         }
@@ -16243,7 +16243,7 @@
           const src = track.getAttribute("src");
           const url = parseUrl(src);
           if (url !== null && url.hostname !== window.location.href.hostname && ["http:", "https:"].includes(url.protocol)) {
-            fetch(src, "blob").then((blob) => {
+            fetch2(src, "blob").then((blob) => {
               track.setAttribute("src", window.URL.createObjectURL(blob));
             }).catch(() => {
               removeElement2(track);
@@ -18062,7 +18062,7 @@
         player.media = replaceElement(wrapper, player.media);
       }
       if (!config.customControls) {
-        fetch(format(player.config.urls.vimeo.api, src)).then((response) => {
+        fetch2(format(player.config.urls.vimeo.api, src)).then((response) => {
           if (is.empty(response) || !response.thumbnail_url) {
             return;
           }
@@ -18323,7 +18323,7 @@
     // Get the media title
     getTitle(videoId) {
       const url = format(this.config.urls.youtube.api, videoId);
-      fetch(url).then((data) => {
+      fetch2(url).then((data) => {
         if (is.object(data)) {
           const {
             title,
@@ -19018,7 +19018,7 @@
       });
       _defineProperty$1(this, "getThumbnail", (url) => {
         return new Promise((resolve) => {
-          fetch(url, void 0, this.player.config.previewThumbnails.withCredentials).then((response) => {
+          fetch2(url, void 0, this.player.config.previewThumbnails.withCredentials).then((response) => {
             const thumbnail = {
               frames: parseVtt(response),
               height: null,
@@ -25759,14 +25759,10 @@
     startEndCheck();
   }
 
-  // assets/js/functions/productVariation.js.js
+  // assets/js/functions/productVariation.js
   function ProductVariation() {
     const $form = jQuery(".variations_form.cart");
-    if (!$form.length) {
-      console.log("ProductVariation: Variations form not found. Exiting.");
-      return;
-    }
-    console.log("ProductVariation: Variations form found.");
+    if (!$form.length) return;
     const $priceDisplay = jQuery("#product-price-display");
     const $stockWrapper = jQuery("#stock-status-wrapper");
     const $stockText = jQuery("#stock-status-text");
@@ -25776,117 +25772,249 @@
       onlyLeft: (i18nBox == null ? void 0 : i18nBox.dataset.onlyLeft) || "\u0641\u0642\u0637",
       itemsLeft: (i18nBox == null ? void 0 : i18nBox.dataset.itemsLeft) || "\u0639\u062F\u062F \u0628\u0627\u0642\u06CC\u0645\u0627\u0646\u062F\u0647"
     };
-    let initialPriceHtml = $priceDisplay.length ? $priceDisplay.html() : "";
-    let initialStockHtml = $stockWrapper.length ? $stockWrapper.html() : "";
-    console.log("ProductVariation: Initial price HTML:", initialPriceHtml);
-    console.log("ProductVariation: Initial stock HTML:", initialStockHtml);
+    const initialPriceHtml = $priceDisplay.length ? $priceDisplay.html() : "";
+    if ($stockWrapper.length) {
+      if ($stockWrapper.hasClass("hidden")) {
+        $stockWrapper.removeClass("hidden").addClass("opacity-0 -translate-y-1 pointer-events-none");
+      }
+      $stockWrapper.addClass("transition-all duration-300 ease-out");
+    }
+    function animatePrice(newHtml, inStock) {
+      if (!$priceDisplay.length) return;
+      const newContent = inStock ? newHtml : '<span class="text-[#dd4a4a] text-lg">'.concat(t9.outOfStock, "</span>");
+      $priceDisplay.addClass("transition-opacity duration-300");
+      $priceDisplay.removeClass("opacity-100").addClass("opacity-0");
+      setTimeout(() => {
+        $priceDisplay.html(newContent);
+        $priceDisplay.removeClass("opacity-0").addClass("opacity-100");
+      }, 180);
+    }
+    function showStock(text) {
+      if (!$stockWrapper.length || !$stockText.length) return;
+      if ($stockWrapper.hasClass("opacity-100") && $stockText.text() !== text) {
+        $stockWrapper.removeClass("opacity-100").addClass("opacity-0");
+        setTimeout(() => {
+          $stockText.text(text);
+          $stockWrapper.removeClass("opacity-0").addClass("opacity-100");
+        }, 180);
+      } else {
+        $stockText.text(text);
+        $stockWrapper.removeClass("opacity-0 -translate-y-1 pointer-events-none").addClass("opacity-100 translate-y-0");
+      }
+    }
+    function hideStock() {
+      if (!$stockWrapper.length) return;
+      $stockWrapper.removeClass("opacity-100 translate-y-0").addClass("opacity-0 -translate-y-1 pointer-events-none");
+    }
     function setSelectAndTrigger(attrName, value) {
-      console.log(
-        "setSelectAndTrigger called for attribute: ".concat(attrName, ", value: ").concat(value)
-      );
       const $sel = $form.find('select[name="attribute_'.concat(attrName, '"]'));
       if ($sel.length && value) {
-        console.log(
-          "Select element found for attribute ".concat(attrName, ". Setting value to ").concat(value)
-        );
         $sel.val(value);
         $sel.trigger("change");
-        console.log("Triggered 'change' event for select ".concat(attrName, "."));
         setTimeout(() => {
-          console.log(
-            "Triggering 'check_variations' from setSelectAndTrigger..."
-          );
           $form.trigger("check_variations");
         }, 0);
-      } else {
-        console.log(
-          "Select element not found or value is empty for attribute ".concat(attrName, ".")
-        );
       }
     }
     function setSelectValue(attrName, value) {
-      console.log(
-        "setSelectValue called for attribute: ".concat(attrName, ", value: ").concat(value)
-      );
       const $sel = $form.find('select[name="attribute_'.concat(attrName, '"]'));
       if ($sel.length && value) {
-        console.log(
-          "Select element found for attribute ".concat(attrName, ". Setting value to ").concat(value, " in setSelectValue.")
-        );
         $sel.val(value);
-      } else {
-        console.log(
-          "Select element not found or value is empty for attribute ".concat(attrName, " in setSelectValue.")
-        );
       }
     }
     jQuery(document).on("click", ".color-option", function() {
-      console.log("Color option clicked.");
       const attr = this.dataset.attribute;
       const val = this.dataset.color;
-      console.log("Clicked color: attribute=".concat(attr, ", value=").concat(val));
-      if (!attr || !val) {
-        console.log("Missing attribute or value on color option. Skipping.");
-        return;
-      }
+      if (!attr || !val) return;
       jQuery(".color-option").removeClass("active");
       jQuery(this).addClass("active");
-      console.log("Removed 'active' from other color options, added to clicked.");
       setSelectAndTrigger(attr, val);
     });
     jQuery(document).on("click", ".size-option", function() {
-      console.log("Size option clicked.");
       const attr = this.dataset.attribute;
       const val = this.dataset.size;
-      console.log("Clicked size: attribute=".concat(attr, ", value=").concat(val));
-      if (!attr || !val) {
-        console.log("Missing attribute or value on size option. Skipping.");
-        return;
-      }
+      if (!attr || !val) return;
       jQuery(".size-option").removeClass("active");
       jQuery(this).addClass("active");
-      console.log("Removed 'active' from other size options, added to clicked.");
       setSelectAndTrigger(attr, val);
     });
     $form.on("found_variation", function(evt, variation) {
-      console.log("Event 'found_variation' triggered.", variation);
-      if (variation.price_html && $priceDisplay.length) {
-        if (variation.is_in_stock) {
-          $priceDisplay.html(variation.price_html);
-          console.log("Updated price display with:", variation.price_html);
-        } else {
-          $priceDisplay.html(
-            '<span class="text-[#dd4a4a] text-lg">'.concat(t9.outOfStock, "</span>")
-          );
-          console.log("Product is out of stock. Updated price display.");
-        }
+      if (variation.price_html) {
+        animatePrice(variation.price_html, variation.is_in_stock);
       }
-      if ($stockWrapper.length && $stockText.length) {
-        if (!variation.is_in_stock) {
-          $stockText.text(t9.outOfStock);
-          $stockWrapper.removeClass("hidden");
-          console.log("Stock status: Out of stock.");
-        } else if (variation.max_qty != null && variation.max_qty > 0 && variation.max_qty <= 4) {
-          $stockText.text("".concat(t9.onlyLeft, " ").concat(variation.max_qty, " ").concat(t9.itemsLeft));
-          $stockWrapper.removeClass("hidden");
-          console.log("Stock status: Only ".concat(variation.max_qty, " left."));
-        } else {
-          $stockWrapper.addClass("hidden");
-          console.log("Stock status: In stock, no special message.");
-        }
+      if (!variation.is_in_stock) {
+        showStock(t9.outOfStock);
+      } else if (variation.max_qty != null && variation.max_qty > 0 && variation.max_qty <= 4) {
+        showStock("".concat(t9.onlyLeft, " ").concat(variation.max_qty, " ").concat(t9.itemsLeft));
+      } else {
+        hideStock();
       }
     });
     $form.on("hide_variation", function() {
-      console.log("Event 'hide_variation' triggered.");
       if (initialPriceHtml && $priceDisplay.length) {
-        $priceDisplay.html(initialPriceHtml);
-        console.log("Reset price display to initial HTML.");
+        animatePrice(initialPriceHtml, true);
       }
-      if (initialStockHtml && $stockWrapper.length) {
-        $stockWrapper.html(initialStockHtml);
-        console.log("Reset stock display to initial HTML.");
+      hideStock();
+    });
+    setTimeout(() => {
+      let selectsReady = false;
+      const $color = jQuery(".color-option").first();
+      if ($color.length && $color[0].dataset.attribute && $color[0].dataset.color) {
+        $color.addClass("active");
+        setSelectValue($color[0].dataset.attribute, $color[0].dataset.color);
+        selectsReady = true;
       }
-      $stockWrapper.addClass("hidden");
+      const $size = jQuery(".size-option").first();
+      if ($size.length && $size[0].dataset.attribute && $size[0].dataset.size) {
+        $size.addClass("active");
+        setSelectValue($size[0].dataset.attribute, $size[0].dataset.size);
+        selectsReady = true;
+      }
+      if (selectsReady) {
+        $form.trigger("check_variations");
+      }
+    }, 200);
+  }
+
+  // assets/js/functions/productReviews.js
+  function ProductReviews() {
+    document.addEventListener("DOMContentLoaded", function() {
+      const starRating = document.querySelector(".star-rating");
+      if (starRating) {
+        let updateStars = function(value) {
+          stars.forEach((star, index) => {
+            if (index < value) {
+              star.classList.remove("text-gray-300");
+              star.classList.add("text-[#ffe31e]");
+            } else {
+              star.classList.remove("text-[#ffe31e]");
+              star.classList.add("text-gray-300");
+            }
+          });
+        }, highlightStars = function(value) {
+          stars.forEach((star, index) => {
+            if (index < value) {
+              star.classList.remove("text-gray-300");
+              star.classList.add("text-[#ffe31e]");
+            } else {
+              star.classList.remove("text-[#ffe31e]");
+              star.classList.add("text-gray-300");
+            }
+          });
+        };
+        const stars = starRating.querySelectorAll(".star");
+        const ratingSelect = document.getElementById("rating");
+        stars.forEach((star) => {
+          star.addEventListener("click", function() {
+            const value = parseInt(this.getAttribute("data-value"));
+            ratingSelect.value = value;
+            updateStars(value);
+          });
+          star.addEventListener("mouseenter", function() {
+            const value = parseInt(this.getAttribute("data-value"));
+            highlightStars(value);
+          });
+        });
+        starRating.addEventListener("mouseleave", function() {
+          const currentValue = parseInt(ratingSelect.value) || 0;
+          updateStars(currentValue);
+        });
+      }
+    });
+  }
+
+  // assets/js/functions/cart.js
+  function CartPage() {
+    console.log("Cart page initialized");
+    function updateCartQuantity(cartKey, quantity) {
+      const cartItem = document.querySelector(
+        '.cart-item[data-cart-key="'.concat(cartKey, '"]')
+      );
+      if (!cartItem) return;
+      cartItem.classList.add("loading");
+      fetch(cart_ajax_params.ajax_url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+          action: "update_cart_quantity",
+          cart_key: cartKey,
+          quantity,
+          security: cart_ajax_params.nonce
+        })
+      }).then((response) => response.json()).then((data) => {
+        if (data.success) {
+          const subtotalElement = cartItem.querySelector(".item-subtotal");
+          if (subtotalElement && data.data.item_subtotal) {
+            subtotalElement.innerHTML = data.data.item_subtotal;
+          }
+          if (data.data.cart_subtotal) {
+            const cartSubtotal = document.querySelector(
+              ".cart-subtotal-amount"
+            );
+            if (cartSubtotal) cartSubtotal.innerHTML = data.data.cart_subtotal;
+          }
+          if (data.data.cart_total) {
+            const cartTotal = document.querySelector(".cart-total-amount");
+            if (cartTotal) cartTotal.innerHTML = data.data.cart_total;
+          }
+          if (quantity === 0) {
+            cartItem.remove();
+            const remainingItems = document.querySelectorAll(".cart-item");
+            if (remainingItems.length === 0) {
+              location.reload();
+            }
+          }
+        } else {
+          alert(data.data.message || "\u062E\u0637\u0627 \u062F\u0631 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC \u0633\u0628\u062F \u062E\u0631\u06CC\u062F");
+        }
+      }).catch((error) => {
+        console.error("Error:", error);
+        alert("\u062E\u0637\u0627 \u062F\u0631 \u0627\u0631\u062A\u0628\u0627\u0637 \u0628\u0627 \u0633\u0631\u0648\u0631");
+      }).finally(() => {
+        cartItem.classList.remove("loading");
+      });
+    }
+    document.querySelectorAll(".quantity-btn").forEach((btn) => {
+      btn.addEventListener("click", function(e10) {
+        e10.preventDefault();
+        const cartKey = this.dataset.cartKey;
+        const input = this.parentElement.querySelector("input.qty");
+        const currentQty = parseInt(input.value) || 0;
+        const maxQty = parseInt(input.getAttribute("max")) || 9999;
+        const minQty = parseInt(input.getAttribute("min")) || 0;
+        let newQty;
+        if (this.classList.contains("quantity-plus")) {
+          newQty = Math.min(currentQty + 1, maxQty);
+        } else {
+          newQty = Math.max(currentQty - 1, minQty);
+        }
+        if (newQty !== currentQty) {
+          input.value = newQty;
+          updateCartQuantity(cartKey, newQty);
+        }
+      });
+    });
+    document.querySelectorAll("input.qty").forEach((input) => {
+      input.addEventListener("change", function() {
+        const cartKey = this.closest(".cart-item").dataset.cartKey;
+        const newQty = parseInt(this.value) || 0;
+        const maxQty = parseInt(this.getAttribute("max")) || 9999;
+        const minQty = parseInt(this.getAttribute("min")) || 0;
+        const validQty = Math.max(minQty, Math.min(newQty, maxQty));
+        this.value = validQty;
+        updateCartQuantity(cartKey, validQty);
+      });
+    });
+    document.querySelectorAll(".remove-item").forEach((link) => {
+      link.addEventListener("click", function(e10) {
+        e10.preventDefault();
+        if (confirm("\u0622\u06CC\u0627 \u0627\u0632 \u062D\u0630\u0641 \u0627\u06CC\u0646 \u0645\u062D\u0635\u0648\u0644 \u0627\u0637\u0645\u06CC\u0646\u0627\u0646 \u062F\u0627\u0631\u06CC\u062F\u061F")) {
+          const cartKey = this.closest(".cart-item").dataset.cartKey;
+          updateCartQuantity(cartKey, 0);
+        }
+      });
     });
   }
 
@@ -25907,6 +26035,8 @@
   InstockToggle();
   Countdown();
   ProductVariation();
+  ProductReviews();
+  CartPage();
 })();
 /*! Bundled license information:
 
