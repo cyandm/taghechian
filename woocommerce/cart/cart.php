@@ -7,6 +7,8 @@
  * @version 7.9.0
  */
 
+use Cyan\Theme\Helpers\Icon;
+
 defined('ABSPATH') || exit;
 
 do_action('woocommerce_before_cart'); ?>
@@ -17,14 +19,14 @@ do_action('woocommerce_before_cart'); ?>
 
 		<!-- Cart Header -->
 		<div class="bg-white">
-			<h1 class="text-3xl font-normal font-[dinar] text-cynBlack pb-3 md:pb-6">سبد خرید</h1>
+			<h1 class="text-3xl font-normal font-[dinar] text-cynBlack pb-3 md:pb-6"><?php _e('سبد خرید', 'taghechain'); ?></h1>
 
 			<!-- Table Header -->
 			<div class="hidden md:grid grid-cols-12 gap-4 px-12 py-4 bg-cynBgItem/30 rounded-xl text-xs md:text-base font-medium text-cynBlack">
-				<div class="col-span-2 text-right">نام محصول</div>
-				<div class="col-span-2 text-center">قیمت</div>
-				<div class="col-span-6 text-center">تعداد</div>
-				<div class="col-span-2 text-right">جمع نهایی</div>
+				<div class="col-span-3 text-start"><?php _e('نام محصول', 'taghechain'); ?></div>
+				<div class="col-span-2 text-start"><?php _e('قیمت', 'taghechain'); ?></div>
+				<div class="col-span-5 text-start"><?php _e('تعداد', 'taghechain'); ?></div>
+				<div class="col-span-2 text-end"><?php _e('جمع نهایی', 'taghechain'); ?></div>
 			</div>
 
 			<!-- Cart Items -->
@@ -37,10 +39,10 @@ do_action('woocommerce_before_cart'); ?>
 					if ($_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters('woocommerce_cart_item_visible', true, $cart_item, $cart_item_key)) {
 						$product_permalink = apply_filters('woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink($cart_item) : '', $cart_item, $cart_item_key);
 				?>
-						<div class="cart-item grid grid-cols-12 gap-4 px-6 py-6 border-b border-gray-100 hover:bg-gray-50 transition-colors items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+						<div class="cart-item grid grid-cols-12 gap-4 px-6 py-6 border-b border-cynBlack/10 hover:bg-gray-50 transition-colors items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
 
 							<!-- Product Image & Name (6 columns) -->
-							<div class="col-span-12 md:col-span-2 flex items-center gap-4">
+							<div class="col-span-12 md:col-span-3 flex items-center gap-4">
 								<!-- Product Image -->
 								<div class="flex-shrink-0">
 									<?php
@@ -78,57 +80,63 @@ do_action('woocommerce_before_cart'); ?>
 							</div>
 
 							<!-- Price (2 columns) -->
-							<div class="col-span-4 md:col-span-2 text-center">
-								<span class="text-sm md:text-base font-medium text-gray-700">
+							<div class="col-span-4 md:col-span-2">
+								<span class="text-sm font-medium text-gray-700">
 									<?php echo apply_filters('woocommerce_cart_item_price', WC()->cart->get_product_price($_product), $cart_item, $cart_item_key); ?>
 								</span>
 							</div>
 
 							<!-- Quantity Controls (4 columns) -->
-							<div class="col-span-4 md:col-span-2 flex items-center justify-center gap-3">
-								<div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-									<!-- Decrease Button -->
-									<button type="button" class="quantity-btn quantity-minus px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
-										−
-									</button>
+							<div class="col-span-4 md:col-span-5 flex items-center gap-3">
 
-									<!-- Quantity Input -->
-									<?php
-									echo woocommerce_quantity_input(
-										array(
-											'input_name'   => "cart[{$cart_item_key}][qty]",
-											'input_value'  => $cart_item['quantity'],
-											'max_value'    => $_product->get_max_purchase_quantity(),
-											'min_value'    => '0',
-											'product_name' => $_product->get_name(),
-											'classes'      => array('input-text', 'qty', 'text', 'border-0', 'text-center', 'w-16', 'focus:outline-none', 'focus:ring-0'),
-										),
-										$_product,
-										false
-									);
-									?>
+								<div class="bg-cynBgItem/30 rounded-lg flex justify-center items-center gap-6 px-6 py-2">
 
-									<!-- Increase Button -->
-									<button type="button" class="quantity-btn quantity-plus px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
-										+
-									</button>
+									<div class="flex items-center overflow-hidden">
+
+										<!-- Decrease Button -->
+										<button type="button" class="quantity-btn quantity-plus p-1 md:p-2 bg-white border border-cynBlack/10 rounded-md hover:bg-cynYellow text-cynBlack font-bold transition-colors size-6 md:size-8 flex justify-center items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+											<?php Icon::Print('plus'); ?>
+										</button>
+
+										<!-- Quantity Input -->
+										<?php
+										echo woocommerce_quantity_input(
+											array(
+												'input_name'   => "cart[{$cart_item_key}][qty]",
+												'input_value'  => $cart_item['quantity'],
+												'max_value'    => $_product->get_max_purchase_quantity(),
+												'min_value'    => '0',
+												'product_name' => $_product->get_name(),
+												'classes'      => array('input-text', 'product-quantity', 'text', '!border-0', '!border-none', '!outline-none', 'focus:outline-none', 'text-center', 'bg-cynBgItem/30', 'w-6', 'h-6', 'md:!w-8', 'md:!h-8', 'md:!min-h-8', 'focus:outline-none', 'focus:ring-0', 'text-xs', 'font-normal'),
+											),
+											$_product,
+											false
+										);
+										?>
+
+										<!-- Increase Button -->
+										<button type="button" class="quantity-btn quantity-minus p-1 md:p-2 bg-white border border-cynBlack/10 rounded-md hover:bg-cynYellow text-cynBlack font-bold transition-colors size-6 md:size-8 flex justify-center items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+											<?php Icon::Print('minus'); ?>
+										</button>
+
+									</div>
+
+									<!-- Remove Button -->
+									<a href="<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>"
+										class="text-[#C315A5] hover:text-pink-500 transition-colors remove-item"
+										aria-label="<?php echo esc_attr(sprintf(__('حذف %s از سبد خرید', 'woocommerce'), $_product->get_name())); ?>"
+										data-product_id="<?php echo esc_attr($_product->get_id()); ?>"
+										data-product_sku="<?php echo esc_attr($_product->get_sku()); ?>">
+										<div class="size-5 stroke-[1.5]">
+											<?php Icon::print('trash-delete-bin-2-1'); ?>
+										</div>
+									</a>
 								</div>
-
-								<!-- Remove Button -->
-								<a href="<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>"
-									class="text-pink-500 hover:text-pink-600 transition-colors remove-item"
-									aria-label="<?php echo esc_attr(sprintf(__('حذف %s از سبد خرید', 'woocommerce'), $_product->get_name())); ?>"
-									data-product_id="<?php echo esc_attr($_product->get_id()); ?>"
-									data-product_sku="<?php echo esc_attr($_product->get_sku()); ?>">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-									</svg>
-								</a>
 							</div>
 
 							<!-- Subtotal (2 columns) -->
-							<div class="col-span-4 md:col-span-2 text-center">
-								<span class="text-sm md:text-base font-bold text-gray-800 item-subtotal">
+							<div class="col-span-4 md:col-span-2 text-end">
+								<span class="text-base font-normal text-cynBlack item-subtotal">
 									<?php echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); ?>
 								</span>
 							</div>
@@ -147,49 +155,51 @@ do_action('woocommerce_before_cart'); ?>
 	</form>
 
 	<!-- Cart Totals Section -->
-	<div class="cart-collaterals bg-white rounded-b-2xl shadow-sm mt-6 p-6">
+	<div class="cart-collaterals rounded-3xl border border-cynBlack/10 mt-6 p-6">
 		<?php do_action('woocommerce_before_cart_collaterals'); ?>
 
 		<div class="cart-totals-wrapper">
-			<h2 class="text-2xl font-bold text-gray-800 text-right mb-6">جمع کل سبد خرید</h2>
+			<h2 class="text-2xl font-[dinar] text-cynBlack text-start mb-6"><?php _e('جمع کل سبد خرید', 'taghechain'); ?></h2>
 
 			<!-- Subtotal -->
-			<div class="flex justify-between items-center py-3 border-b border-gray-200">
-				<span class="text-gray-600">مجموع سبد خرید</span>
-				<span class="font-semibold text-gray-800 cart-subtotal-amount"><?php wc_cart_totals_subtotal_html(); ?></span>
+			<div class="flex justify-between items-center py-3 px-2">
+				<span class="text-cynBlack/80 font-medium text-xl"><?php _e('مجموع سبد خرید', 'taghechain'); ?></span>
+				<span class="text-sm font-medium text-cynBlack/80 cart-subtotal-amount"><?php wc_cart_totals_subtotal_html(); ?></span>
 			</div>
 
-			<!-- Total -->
-			<div class="flex justify-between items-center py-4 mt-2">
-				<span class="text-lg font-bold text-gray-800">قابل پرداخت</span>
-				<span class="text-2xl font-bold text-blue-600 cart-total-amount"><?php wc_cart_totals_order_total_html(); ?></span>
-			</div>
+			<div class="h-px w-full bg-cynBlack/10 my-3"></div>
 
-			<!-- Proceed to Checkout Button -->
-			<div class="mt-6">
-				<a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="block w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 text-center font-bold py-4 px-6 rounded-xl transition-colors text-lg">
-					تایید و تکمیل سفارش
-				</a>
-			</div>
+			<?php
+			$total_saving = \Cyan\Theme\Classes\WooCommerce::cyn_get_cart_special_price_saving();
 
-			<!-- Coupon Form -->
-			<?php if (wc_coupons_enabled()) : ?>
-				<div class="coupon-section mt-6 flex gap-2">
-					<input type="text" name="coupon_code" class="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-right focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="کد تخفیف" id="coupon_code" value="" />
-					<button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-6 py-3 rounded-lg transition-colors whitespace-nowrap" name="apply_coupon" value="اعمال کوپن">اعمال کوپن</button>
+			if ($total_saving > 0) :
+			?>
+				<div class="flex justify-between items-center py-3 px-2">
+					<span class="text-cynBlack/80 font-medium text-xl"><?php _e('سود شما از این خرید', 'taghechain'); ?></span>
+					<span class="text-[#BE123C] text-sm font-medium cart-saving-amount"><?php echo wc_price($total_saving); ?></span>
 				</div>
 			<?php endif; ?>
 
-			<!-- Update Cart Button -->
-			<div class="mt-4">
-				<button type="button" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors" name="update_cart" value="بروزرسانی سبد خرید" disabled>
-					بروزرسانی سبد خرید
-				</button>
+			<div class="h-px w-full bg-cynBlack/10 my-3"></div>
+
+			<!-- Total -->
+			<div class="flex justify-between items-center py-4 mt-2 px-2">
+				<span class="font-medium text-xl text-cynBlack/80"><?php _e('قابل پرداخت', 'taghechain'); ?></span>
+				<span class="text-xl font-medium text-cynBlue cart-total-amount"><?php wc_cart_totals_order_total_html(); ?></span>
 			</div>
+
 		</div>
 
 		<?php do_action('woocommerce_after_cart_totals'); ?>
 	</div>
+
+	<!-- Proceed to Checkout Button -->
+	<div class="mt-6 flex md:justify-end">
+		<a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="primary-btn rounded-4xl transition-colors font-medium text-base max-md:w-full">
+			<?php _e('تایید و تکمیل سفارش', 'taghechain'); ?>
+		</a>
+	</div>
+
 </div>
 
 <?php do_action('woocommerce_after_cart'); ?>

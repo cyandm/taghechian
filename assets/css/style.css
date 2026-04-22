@@ -659,3 +659,12 @@ html[dir="rtl"] .shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
 #reviews #cancel-comment-reply-link {
   @apply text-sm text-[#EFA114] cursor-pointer mt-3 mb-2 mr-2 font-medium block;
 }
+
+.woocommerce-message {
+  border-top-color: #ffd000 !important;
+}
+
+.woocommerce-message::before {
+  content: "\e015";
+  color: #ffd000 !important;
+}

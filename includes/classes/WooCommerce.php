@@ -143,6 +143,7 @@ class WooCommerce
             'cart_subtotal' => WC()->cart->get_cart_subtotal(),
             'cart_total' => WC()->cart->get_total(),
             'item_subtotal' => $_product ? WC()->cart->get_product_subtotal($_product, $quantity) : '',
+            'cart_saving'   => wc_price(self::cyn_get_cart_special_price_saving()),
         );
 
         wp_send_json_success($response);
@@ -689,5 +690,33 @@ class WooCommerce
         remove_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5);
 
         remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+    }
+
+    public static function cyn_get_cart_special_price_saving()
+    {
+        if (! WC()->cart) {
+            return 0;
+        }
+
+        $total_saving = 0;
+
+        foreach (WC()->cart->get_cart() as $cart_item) {
+            $product  = $cart_item['data'];
+            $quantity = $cart_item['quantity'];
+
+            if (! $product || $quantity < 1) {
+                continue;
+            }
+
+            $regular_price = (float) $product->get_regular_price();
+            $sale_price    = (float) $product->get_sale_price();
+
+            if ($sale_price > 0 && $regular_price > $sale_price) {
+                $saving_per_item = $regular_price - $sale_price;
+                $total_saving += $saving_per_item * $quantity;
+            }
+        }
+
+        return $total_saving;
     }
 }
