@@ -25927,11 +25927,11 @@
   function CartPage() {
     console.log("Cart page initialized");
     function updateCartQuantity(cartKey, quantity) {
-      const cartItem = document.querySelector(
+      const cartItems = document.querySelectorAll(
         '.cart-item[data-cart-key="'.concat(cartKey, '"]')
       );
-      if (!cartItem) return;
-      cartItem.classList.add("loading");
+      if (!cartItems.length) return;
+      cartItems.forEach((addLoading) => addLoading.classList.add("loading"));
       fetch(cart_ajax_params.ajax_url, {
         method: "POST",
         headers: {
@@ -25944,58 +25944,54 @@
           security: cart_ajax_params.nonce
         })
       }).then((response) => response.json()).then((data) => {
-        if (data.success) {
+        if (!data.success) {
+          alert(data.data.message || "\u062E\u0637\u0627 \u062F\u0631 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC \u0633\u0628\u062F \u062E\u0631\u06CC\u062F");
+          return;
+        }
+        cartItems.forEach((cartItem) => {
           const subtotalElement = cartItem.querySelector(".item-subtotal");
           if (subtotalElement && data.data.item_subtotal) {
             subtotalElement.innerHTML = data.data.item_subtotal;
           }
-          if (data.data.cart_subtotal) {
-            const cartSubtotal = document.querySelector(
-              ".cart-subtotal-amount"
-            );
-            if (cartSubtotal) cartSubtotal.innerHTML = data.data.cart_subtotal;
-          }
-          if (data.data.cart_total) {
-            const cartTotal = document.querySelector(".cart-total-amount");
-            if (cartTotal) cartTotal.innerHTML = data.data.cart_total;
-          }
-          if (data.data.cart_saving) {
-            const cartSaving = document.querySelector(".cart-saving-amount");
-            if (cartSaving) {
-              cartSaving.innerHTML = data.data.cart_saving;
-            }
-          }
           if (quantity === 0) {
             cartItem.remove();
-            const remainingItems = document.querySelectorAll(".cart-item");
-            if (remainingItems.length === 0) {
-              location.reload();
-            }
           }
-        } else {
-          alert(data.data.message || "\u062E\u0637\u0627 \u062F\u0631 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC \u0633\u0628\u062F \u062E\u0631\u06CC\u062F");
+        });
+        if (quantity === 0) {
+          const remaining = document.querySelectorAll(".cart-item");
+          if (remaining.length === 0) location.reload();
+        }
+        const cartSubtotal = document.querySelector(".cart-subtotal-amount");
+        if (cartSubtotal && data.data.cart_subtotal) {
+          cartSubtotal.innerHTML = data.data.cart_subtotal;
+        }
+        const cartTotal = document.querySelector(".cart-total-amount");
+        if (cartTotal && data.data.cart_total) {
+          cartTotal.innerHTML = data.data.cart_total;
+        }
+        const cartSaving = document.querySelector(".cart-saving-amount");
+        if (cartSaving && data.data.cart_saving) {
+          cartSaving.innerHTML = data.data.cart_saving;
         }
       }).catch((error) => {
         console.error("Error:", error);
         alert("\u062E\u0637\u0627 \u062F\u0631 \u0627\u0631\u062A\u0628\u0627\u0637 \u0628\u0627 \u0633\u0631\u0648\u0631");
       }).finally(() => {
-        cartItem.classList.remove("loading");
+        cartItems.forEach(
+          (removeLoading) => removeLoading.classList.remove("loading")
+        );
       });
     }
     document.querySelectorAll(".quantity-btn").forEach((btn) => {
       btn.addEventListener("click", function(e10) {
         e10.preventDefault();
         const cartKey = this.dataset.cartKey;
-        const input = this.parentElement.querySelector("input.product-quantity");
+        const container = this.closest(".quantity-container") || this.parentElement;
+        const input = container.querySelector("input.product-quantity");
         const currentQty = parseInt(input.value) || 0;
         const maxQty = parseInt(input.getAttribute("max")) || 9999;
         const minQty = parseInt(input.getAttribute("min")) || 0;
-        let newQty;
-        if (this.classList.contains("quantity-plus")) {
-          newQty = Math.min(currentQty + 1, maxQty);
-        } else {
-          newQty = Math.max(currentQty - 1, minQty);
-        }
+        let newQty = this.classList.contains("quantity-plus") ? Math.min(currentQty + 1, maxQty) : Math.max(currentQty - 1, minQty);
         if (newQty !== currentQty) {
           input.value = newQty;
           updateCartQuantity(cartKey, newQty);
@@ -26004,7 +26000,9 @@
     });
     document.querySelectorAll("input.product-quantity").forEach((input) => {
       input.addEventListener("change", function() {
-        const cartKey = this.closest(".cart-item").dataset.cartKey;
+        const cartItem = this.closest(".cart-item");
+        if (!cartItem) return;
+        const cartKey = cartItem.dataset.cartKey;
         const newQty = parseInt(this.value) || 0;
         const maxQty = parseInt(this.getAttribute("max")) || 9999;
         const minQty = parseInt(this.getAttribute("min")) || 0;
@@ -26017,9 +26015,100 @@
       link.addEventListener("click", function(e10) {
         e10.preventDefault();
         if (confirm("\u0622\u06CC\u0627 \u0627\u0632 \u062D\u0630\u0641 \u0627\u06CC\u0646 \u0645\u062D\u0635\u0648\u0644 \u0627\u0637\u0645\u06CC\u0646\u0627\u0646 \u062F\u0627\u0631\u06CC\u062F\u061F")) {
-          const cartKey = this.closest(".cart-item").dataset.cartKey;
+          const cartItem = this.closest(".cart-item");
+          if (!cartItem) return;
+          const cartKey = cartItem.dataset.cartKey;
           updateCartQuantity(cartKey, 0);
         }
+      });
+    });
+    jQuery(function($2) {
+      var lastCouponMessage = "";
+      function extractLiText(htmlString) {
+        var $tmp = $2("<div>").html(htmlString);
+        var text = $tmp.find("ul.woocommerce-error li, ul.woocommerce-message li").first().text().trim();
+        if (!text) {
+          text = $tmp.find(".woocommerce-error, .woocommerce-message").first().text().trim();
+        }
+        return text || htmlString;
+      }
+      function renderMessage($container, text) {
+        lastCouponMessage = text;
+        $container.find(".coupon_code_response").text(text);
+      }
+      $2("body").on("updated_checkout", function() {
+        if (lastCouponMessage) {
+          $2(".coupon_code_loader").each(function() {
+            $2(this).find(".coupon_code_response").text(lastCouponMessage);
+          });
+        }
+      });
+      $2(document).on(
+        "click",
+        ".coupon_code_loader .apply-coupon-btn",
+        function(e10) {
+          e10.preventDefault();
+          var $container = $2(this).closest(".coupon_code_loader");
+          var $btn = $2(this);
+          var coupon = $container.find(".coupon_code").val();
+          $btn.prop("disabled", true);
+          $container.find(".coupon_code_response").html(
+            '<div class="flex items-center gap-2 text-cynBlack/70"><span class="coupon-spinner"></span><span>\u062F\u0631 \u062D\u0627\u0644 \u0628\u0631\u0631\u0633\u06CC \u06A9\u062F \u062A\u062E\u0641\u06CC\u0641...</span></div>'
+          );
+          $2.ajax({
+            type: "POST",
+            url: wc_checkout_params.wc_ajax_url.replace(
+              "%%endpoint%%",
+              "apply_coupon"
+            ),
+            data: {
+              coupon_code: coupon,
+              security: wc_checkout_params.apply_coupon_nonce
+            },
+            success: function(response) {
+              var messageText = "";
+              if (response && typeof response === "object" && response.messages) {
+                messageText = extractLiText(response.messages);
+              } else if (typeof response === "string") {
+                messageText = extractLiText(response);
+              } else {
+                messageText = "\u067E\u0627\u0633\u062E \u0646\u0627\u0645\u0639\u062A\u0628\u0631 \u0627\u0632 \u0633\u0631\u0648\u0631 \u062F\u0631\u06CC\u0627\u0641\u062A \u0634\u062F.";
+              }
+              renderMessage($container, messageText);
+              $2("body").trigger("update_checkout");
+            },
+            error: function() {
+              renderMessage($container, "\u062E\u0637\u0627 \u062F\u0631 \u0627\u0631\u062A\u0628\u0627\u0637 \u0628\u0627 \u0633\u0631\u0648\u0631!");
+            },
+            complete: function() {
+              $btn.prop("disabled", false);
+            }
+          });
+        }
+      );
+    });
+    jQuery(function($2) {
+      $2("body").on("click", ".delete-coupon-code", function(e10) {
+        e10.preventDefault();
+        $2.ajax({
+          url: themeData.ajaxUrl,
+          type: "POST",
+          data: {
+            action: "delete_coupon_code"
+          },
+          beforeSend: function() {
+            $2(".delete-coupon-code").css("opacity", "0.5");
+          },
+          success: function(res) {
+            $2(".delete-coupon-code").css("opacity", "1");
+            if (res.success) {
+              $2(".coupon_code_response").html(
+                '<p class="text-red-600">' + res.data.message + "</p>"
+              );
+              $2("body").trigger("update_checkout");
+            }
+          }
+        });
       });
     });
   }

@@ -19,7 +19,7 @@ do_action('woocommerce_before_cart'); ?>
 
 		<!-- Cart Header -->
 		<div class="bg-white">
-			<h1 class="text-3xl font-normal font-[dinar] text-cynBlack pb-3 md:pb-6"><?php _e('سبد خرید', 'taghechain'); ?></h1>
+			<h1 class="text-3xl font-normal font-[dinar] text-cynBlack pb-3 md:pb-6"><?php the_title(); ?></h1>
 
 			<!-- Table Header -->
 			<div class="hidden md:grid grid-cols-12 gap-4 px-12 py-4 bg-cynBgItem/30 rounded-xl text-xs md:text-base font-medium text-cynBlack">
@@ -30,7 +30,7 @@ do_action('woocommerce_before_cart'); ?>
 			</div>
 
 			<!-- Cart Items -->
-			<div class="cart-items-container">
+			<div class="cart-items-container flex flex-col max-md:gap-3">
 				<?php
 				foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 					$_product   = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
@@ -39,10 +39,12 @@ do_action('woocommerce_before_cart'); ?>
 					if ($_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters('woocommerce_cart_item_visible', true, $cart_item, $cart_item_key)) {
 						$product_permalink = apply_filters('woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink($cart_item) : '', $cart_item, $cart_item_key);
 				?>
-						<div class="cart-item grid grid-cols-12 gap-4 px-6 py-6 border-b border-cynBlack/10 hover:bg-gray-50 transition-colors items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+
+						<!-- DESKTOP CARD -->
+						<div class="cart-item hidden md:grid grid-cols-4 md:grid-cols-12 gap-4 px-6 py-6 border-b border-cynBlack/10 items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
 
 							<!-- Product Image & Name (6 columns) -->
-							<div class="col-span-12 md:col-span-3 flex items-center gap-4">
+							<div class="col-span-4 md:col-span-3 flex items-center gap-4">
 								<!-- Product Image -->
 								<div class="flex-shrink-0">
 									<?php
@@ -105,7 +107,7 @@ do_action('woocommerce_before_cart'); ?>
 												'input_name'   => "cart[{$cart_item_key}][qty]",
 												'input_value'  => $cart_item['quantity'],
 												'max_value'    => $_product->get_max_purchase_quantity(),
-												'min_value'    => '0',
+												'min_value'    => '1',
 												'product_name' => $_product->get_name(),
 												'classes'      => array('input-text', 'product-quantity', 'text', '!border-0', '!border-none', '!outline-none', 'focus:outline-none', 'text-center', 'bg-cynBgItem/30', 'w-6', 'h-6', 'md:!w-8', 'md:!h-8', 'md:!min-h-8', 'focus:outline-none', 'focus:ring-0', 'text-xs', 'font-normal'),
 											),
@@ -123,7 +125,7 @@ do_action('woocommerce_before_cart'); ?>
 
 									<!-- Remove Button -->
 									<a href="<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>"
-										class="text-[#C315A5] hover:text-pink-500 transition-colors remove-item"
+										class="text-[#C315A5] hover:text-pink-500 transition-colors"
 										aria-label="<?php echo esc_attr(sprintf(__('حذف %s از سبد خرید', 'woocommerce'), $_product->get_name())); ?>"
 										data-product_id="<?php echo esc_attr($_product->get_id()); ?>"
 										data-product_sku="<?php echo esc_attr($_product->get_sku()); ?>">
@@ -142,6 +144,129 @@ do_action('woocommerce_before_cart'); ?>
 							</div>
 
 						</div>
+
+						<!-- MOBILE CARD -->
+						<div class="cart-item md:hidden border border-cynBlack/10 rounded-2xl overflow-hidden text-sm" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+
+							<!-- Product -->
+							<div class=" flex items-center gap-5 border-b border-cynBlack/10">
+
+								<div class="w-3/12 bg-cynBgItem/30 px-3 py-7 border-e border-cynBlack/10">
+									<span class="text-cynBlack/70">محصول</span>
+								</div>
+
+								<div class="flex items-center gap-3 w-8/12">
+
+									<div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+										<?php
+										$thumbnail = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image('thumbnail'), $cart_item, $cart_item_key);
+										if (!$product_permalink) {
+											echo $thumbnail;
+										} else {
+											printf('<a href="%s">%s</a>', esc_url($product_permalink), $thumbnail);
+										}
+										?>
+									</div>
+
+									<div class="text-right text-cynBlack text-xs font-medium">
+										<?php
+										if (!$product_permalink) {
+											echo wp_kses_post($_product->get_name());
+										} else {
+											echo '<a href="' . esc_url($product_permalink) . '">' . wp_kses_post($_product->get_name()) . '</a>';
+										}
+										?>
+									</div>
+
+								</div>
+							</div>
+
+
+							<!-- Price -->
+							<div class="flex items-center gap-5 border-b border-cynBlack/10">
+
+								<div class="w-3/12 bg-cynBgItem/30 px-3 py-5 border-e border-cynBlack/10">
+									<span class="text-cynBlack/70">قیمت</span>
+								</div>
+
+								<span class="text-cynBlack font-medium w-8/12">
+									<?php echo WC()->cart->get_product_price($_product); ?>
+								</span>
+
+							</div>
+
+
+							<!-- Quantity -->
+							<div class="flex items-center border-b border-cynBlack/10">
+
+								<div class="w-3/12 bg-cynBgItem/30 px-3 py-7 border-e border-cynBlack/10">
+									<span class="text-cynBlack/70">تعداد</span>
+								</div>
+
+								<div class="flex items-center justify-between px-2 py-3 flex-1">
+
+									<div class="flex items-center justify-between gap-4 bg-cynBgItem/30 rounded-lg px-4 py-2 w-full">
+
+										<div class="flex items-center gap-1">
+
+											<!-- Decrease Button -->
+											<button type="button" class="quantity-btn quantity-plus p-1 md:p-2 bg-white border border-cynBlack/10 rounded-md hover:bg-cynYellow text-cynBlack font-bold transition-colors size-6 md:size-8 flex justify-center items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+												<?php Icon::Print('plus'); ?>
+											</button>
+
+											<!-- Quantity Input -->
+											<?php
+											echo woocommerce_quantity_input(
+												array(
+													'input_name'   => "cart[{$cart_item_key}][qty]",
+													'input_value'  => $cart_item['quantity'],
+													'max_value'    => $_product->get_max_purchase_quantity(),
+													'min_value'    => '1',
+													'product_name' => $_product->get_name(),
+													'classes'      => array('input-text', 'product-quantity', 'text', '!border-0', '!border-none', '!outline-none', 'focus:outline-none', 'text-center', 'bg-cynBgItem/30', 'w-6', 'h-6', 'md:!w-8', 'md:!h-8', 'md:!min-h-8', 'focus:outline-none', 'focus:ring-0', 'text-xs', 'font-normal'),
+												),
+												$_product,
+												false
+											);
+											?>
+
+											<!-- Increase Button -->
+											<button type="button" class="quantity-btn quantity-minus p-1 md:p-2 bg-white border border-cynBlack/10 rounded-md hover:bg-cynYellow text-cynBlack font-bold transition-colors size-6 md:size-8 flex justify-center items-center" data-cart-key="<?php echo esc_attr($cart_item_key); ?>">
+												<?php Icon::Print('minus'); ?>
+											</button>
+
+										</div>
+
+										<!-- remove -->
+										<a href="<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>"
+											class="text-[#C315A5]">
+											<div class="size-5 stroke-[1.5]">
+												<?php Icon::print('trash-delete-bin-2-1'); ?>
+											</div>
+										</a>
+
+									</div>
+
+								</div>
+
+							</div>
+
+
+							<!-- Subtotal -->
+							<div class="flex items-center gap-5">
+
+								<div class="w-3/12 bg-cynBgItem/30 px-3 py-5 border-e border-cynBlack/10">
+									<span class="text-cynBlack/70">جمع نهایی</span>
+								</div>
+
+								<span class="text-cynBlack text-base font-medium item-subtotal w-8/12">
+									<?php echo WC()->cart->get_product_subtotal($_product, $cart_item['quantity']); ?>
+								</span>
+
+							</div>
+
+						</div>
+
 				<?php
 					}
 				}
@@ -159,23 +284,24 @@ do_action('woocommerce_before_cart'); ?>
 		<?php do_action('woocommerce_before_cart_collaterals'); ?>
 
 		<div class="cart-totals-wrapper">
-			<h2 class="text-2xl font-[dinar] text-cynBlack text-start mb-6"><?php _e('جمع کل سبد خرید', 'taghechain'); ?></h2>
+			<p class="text-2xl font-[dinar] text-cynBlack text-start mb-6"><?php _e('جمع کل سبد خرید', 'taghechain'); ?></p>
 
 			<!-- Subtotal -->
 			<div class="flex justify-between items-center py-3 px-2">
-				<span class="text-cynBlack/80 font-medium text-xl"><?php _e('مجموع سبد خرید', 'taghechain'); ?></span>
+				<span class="text-cynBlack/80 font-medium text-base md:text-xl"><?php _e('مجموع سبد خرید', 'taghechain'); ?></span>
 				<span class="text-sm font-medium text-cynBlack/80 cart-subtotal-amount"><?php wc_cart_totals_subtotal_html(); ?></span>
 			</div>
-
-			<div class="h-px w-full bg-cynBlack/10 my-3"></div>
 
 			<?php
 			$total_saving = \Cyan\Theme\Classes\WooCommerce::cyn_get_cart_special_price_saving();
 
 			if ($total_saving > 0) :
 			?>
+
+				<div class="h-px w-full bg-cynBlack/10 my-3"></div>
+
 				<div class="flex justify-between items-center py-3 px-2">
-					<span class="text-cynBlack/80 font-medium text-xl"><?php _e('سود شما از این خرید', 'taghechain'); ?></span>
+					<span class="text-cynBlack/80 font-medium text-base md:text-xl"><?php _e('سود شما از این خرید', 'taghechain'); ?></span>
 					<span class="text-[#BE123C] text-sm font-medium cart-saving-amount"><?php echo wc_price($total_saving); ?></span>
 				</div>
 			<?php endif; ?>
@@ -184,8 +310,8 @@ do_action('woocommerce_before_cart'); ?>
 
 			<!-- Total -->
 			<div class="flex justify-between items-center py-4 mt-2 px-2">
-				<span class="font-medium text-xl text-cynBlack/80"><?php _e('قابل پرداخت', 'taghechain'); ?></span>
-				<span class="text-xl font-medium text-cynBlue cart-total-amount"><?php wc_cart_totals_order_total_html(); ?></span>
+				<span class="font-medium text-base md:text-xl text-cynBlack/80"><?php _e('قابل پرداخت', 'taghechain'); ?></span>
+				<span class="text-base md:text-xl font-medium text-cynBlue cart-total-amount"><?php wc_cart_totals_order_total_html(); ?></span>
 			</div>
 
 		</div>
@@ -195,7 +321,7 @@ do_action('woocommerce_before_cart'); ?>
 
 	<!-- Proceed to Checkout Button -->
 	<div class="mt-6 flex md:justify-end">
-		<a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="primary-btn rounded-4xl transition-colors font-medium text-base max-md:w-full">
+		<a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="primary-btn rounded-4xl transition-colors font-medium text-base max-md:w-full text-center">
 			<?php _e('تایید و تکمیل سفارش', 'taghechain'); ?>
 		</a>
 	</div>
@@ -227,74 +353,6 @@ do_action('woocommerce_before_cart'); ?>
 	@keyframes spin {
 		to {
 			transform: translate(-50%, -50%) rotate(360deg);
-		}
-	}
-
-	/* Mobile Responsive Styles */
-	@media (max-width: 768px) {
-		.cart-item {
-			display: flex;
-			flex-direction: column;
-			gap: 1rem;
-			position: relative;
-		}
-
-		/* Product Image & Name - Full Width */
-		.cart-item>div:nth-child(1) {
-			order: 1;
-			grid-column: span 12;
-		}
-
-		/* Price */
-		.cart-item>div:nth-child(2) {
-			order: 2;
-			grid-column: span 12;
-			text-align: right !important;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.cart-item>div:nth-child(2)::before {
-			content: 'قیمت:';
-			font-weight: 600;
-			color: #4b5563;
-		}
-
-		/* Quantity Controls */
-		.cart-item>div:nth-child(3) {
-			order: 3;
-			grid-column: span 12;
-			justify-content: space-between !important;
-		}
-
-		.cart-item>div:nth-child(3)::before {
-			content: 'تعداد:';
-			font-weight: 600;
-			color: #4b5563;
-		}
-
-		/* Subtotal */
-		.cart-item>div:nth-child(4) {
-			order: 4;
-			grid-column: span 12;
-			text-align: right !important;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.cart-item>div:nth-child(4)::before {
-			content: 'جمع نهایی:';
-			font-weight: 600;
-			color: #4b5563;
-		}
-
-		/* Remove button positioning */
-		.cart-item .remove-item {
-			position: absolute;
-			top: 1rem;
-			left: 1rem;
 		}
 	}
 </style>

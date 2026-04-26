@@ -660,11 +660,159 @@ html[dir="rtl"] .shop-sidebar .instock-toggle-btn.is-on [data-toggle-knob] {
   @apply text-sm text-[#EFA114] cursor-pointer mt-3 mb-2 mr-2 font-medium block;
 }
 
-.woocommerce-message {
-  border-top-color: #ffd000 !important;
+.woocommerce .woocommerce-form-coupon-toggle {
+  display: none;
 }
 
-.woocommerce-message::before {
-  content: "\e015";
+.woocommerce-message:focus-visible,
+.woocommerce-info:focus-visible {
+  outline: none !important;
+}
+
+.woocommerce-message,
+.woocommerce-info {
+  margin: 0 0 1em 0;
+  border-top: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-end-end-radius: 1.25rem;
+  border-start-end-radius: 1.25rem;
+  @apply flex-col gap-3 md:flex-row;
+}
+
+.woocommerce-message a.button {
+  padding: 0.25rem 0.5rem;
+  background: #4f9658;
+  color: #ffffff;
+  border-radius: 0.375rem !important;
+  font-size: 14px !important;
+  font-weight: 400;
+}
+
+.woocommerce-info[role="status"]::before {
   color: #ffd000 !important;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.woocommerce-info[role="status"] {
+  border-inline-start: 1px #ffd000 !important;
+  background-color: #ffd0002b !important;
+  backdrop-filter: blur(36px);
+}
+
+.woocommerce-info a {
+  padding: 0.25rem 0.5rem;
+  background: #ffd000;
+  color: #000000;
+  border-radius: 0.375rem !important;
+  font-size: 14px !important;
+  font-weight: 400;
+}
+
+.woocommerce-message[role="alert"]::after,
+.woocommerce-info[role="status"]::after {
+  display: none;
+}
+
+/* Remove number input spin buttons (Chrome, Edge, Safari) */
+.woocommerce-cart-form-wrapper input[type="number"]::-webkit-inner-spin-button,
+.woocommerce-cart-form-wrapper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.woocommerce-cart-form-wrapper input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.woocommerce-checkout input,
+.woocommerce-checkout textarea {
+  @apply !border !border-cynBlack/20 !rounded-2xl;
+}
+
+.woocommerce-checkout .woocommerce-additional-fields h3 {
+  display: none;
+}
+
+.woocommerce-checkout .woocommerce-terms-and-conditions-wrapper {
+  display: none;
+}
+
+.woocommerce-checkout #payment {
+  background: none !important;
+  border: none !important;
+}
+
+.woocommerce-checkout #payment ul.payment_methods {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.woocommerce-checkout #payment div.payment_box {
+  background-color: #ffd000 !important;
+  color: #212121 !important;
+  border-radius: 24px !important;
+}
+
+.woocommerce-checkout #payment div.payment_box::before {
+  border: 1em solid #ffd000 !important;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+}
+
+.woocommerce-checkout #payment div.form-row {
+  padding: 0 !important;
+}
+
+.woocommerce-checkout #payment div.form-row button {
+  @apply !w-full !flex !justify-center !items-center !py-2 !px-4 !text-base !font-medium !bg-cynYellow !text-cynBlack !rounded-4xl !border !border-cynYellow hover:!bg-cynWhite hover:!text-cynBlack !transition-all !duration-300;
+}
+
+.woocommerce form .form-row .input-text:focus-visible {
+  border-color: transparent !important;
+}
+
+.woocommerce form .form-row .input-text:focus {
+  border-color: #ffd000 !important;
+}
+
+.woocommerce form .form-row .input-text:focus {
+  outline: #ffd000 !important;
+}
+
+.woocommerce-checkout #billing_phone_field input {
+  direction: rtl !important;
+}
+
+.woocommerce-checkout .state_select {
+  @apply !border !border-cynBlack/20 !rounded-2xl;
+}
+
+/* استایل Select2 مربوط به فیلد billing_state */
+.woocommerce-checkout
+  #billing_state_field
+  .select2-container
+  .select2-selection {
+  border: 1px solid #d3d3d3 !important;
+  border-radius: 16px !important;
+  height: 48px !important;
+  padding: 0px 0px !important;
+  display: flex;
+  align-items: center;
+}
+
+.woocommerce-checkout
+  #billing_state_field
+  .select2-container
+  .select2-selection--single
+  .select2-selection__rendered {
+  padding: 0 0.5rem !important;
+}
+
+.woocommerce-checkout #billing_country_field {
+  display: none !important;
 }

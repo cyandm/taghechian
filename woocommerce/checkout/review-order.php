@@ -1,110 +1,149 @@
 <?php
-/**
- * Review order table
- *
- * This template can be overridden by copying it to yourtheme/woocommerce/checkout/review-order.php.
- *
- * HOWEVER, on occasion WooCommerce will need to update template files and you
- * (the theme developer) will need to copy the new files to your theme to
- * maintain compatibility. We try to do this as little as possible, but it does
- * happen. When this occurs the version of the template file will be bumped and
- * the readme will list any important changes.
- *
- * @see https://woocommerce.com/document/template-structure/
- * @package WooCommerce\Templates
- * @version 5.2.0
- */
 
-defined( 'ABSPATH' ) || exit;
+use Cyan\Theme\Helpers\Icon;
+
+defined('ABSPATH') || exit;
+
 ?>
-<table class="shop_table woocommerce-checkout-review-order-table">
-	<thead>
-		<tr>
-			<th class="product-name"><?php esc_html_e( 'سفر', 'woocommerce' ); ?></th>
-			<th class="product-total"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php
-		do_action( 'woocommerce_review_order_before_cart_contents' );
 
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-			$_product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+<div class="flex flex-col gap-3 woocommerce-checkout-review-order-table">
 
-			if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
-				?>
-				<tr class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
-					<td class="product-name">
-						<?php echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;'; ?>
-						<?php echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times;&nbsp;%s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<?php echo wc_get_formatted_cart_item_data( $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					</td>
-					<td class="product-total">
-						<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					</td>
-				</tr>
-				<?php
-			}
-		}
+	<div class="flex flex-col gap-4 text-sm border border-cynBlack/10 rounded-2xl p-4 md:p-6">
 
-		do_action( 'woocommerce_review_order_after_cart_contents' );
+		<p class="text-2xl font-[dinar] mb-4">
+			جمع کل سبد خرید
+		</p>
+
+		<!-- آیتم‌های سبد -->
+		<!-- <div class="flex flex-col gap-3">
+
+		<?php foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) :
+			$_product = $cart_item['data'];
+
+			if ($_product && $_product->exists() && $cart_item['quantity'] > 0) :
 		?>
-	</tbody>
-	<tfoot>
+				<div class="flex justify-between items-center border-b border-cynBlack/10 pb-2">
+					<div class="flex flex-col gap-1">
+						<span class="font-medium">
+							<?php echo $_product->get_name(); ?>
+						</span>
+						<span class="text-xs text-gray-500">
+							× <?php echo $cart_item['quantity']; ?>
+						</span>
+					</div>
 
-		<tr class="cart-subtotal">
-			<th><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></th>
-			<td><?php wc_cart_totals_subtotal_html(); ?></td>
-		</tr>
+					<div class="font-medium">
+						<?php echo WC()->cart->get_product_subtotal($_product, $cart_item['quantity']); ?>
+					</div>
+				</div>
+		<?php
+			endif;
+		endforeach; ?>
+	</div> -->
 
-		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
-			<tr class="cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
-				<th><?php wc_cart_totals_coupon_label( $coupon ); ?></th>
-				<td><?php wc_cart_totals_coupon_html( $coupon ); ?></td>
-			</tr>
-		<?php endforeach; ?>
+		<!-- جمع جزء -->
+		<div class="flex justify-between pt-2">
+			<span class="text-base md:text-xl font-medium text-cynBlack/80"><?php _e('مجموع سبد خرید', 'taghechian') ?></span>
+			<div class="flex gap-1.5 flex-wrap">
+				<span class="text-sm font-medium text-cynBlack/80 flex items-center">
+					<?php wc_cart_totals_subtotal_html(); ?>
+				</span>
 
-		<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
+				<a href="<?= wc_get_cart_url(); ?>" class="font-medium text-xs flex items-center text-cynBlue/80">
+					<?php _e('مشاهده سبد خرید', 'taghechian') ?>
+					<i class="size-5">
+						<?php Icon::print('Arrow-27'); ?>
+					</i>
+				</a>
 
-			<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
+			</div>
+		</div>
 
-			<?php wc_cart_totals_shipping_html(); ?>
+		<div class="h-px w-full bg-cynBlack/10 my-1"></div>
 
-			<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
+		<!-- حمل و نقل -->
+		<?php if (WC()->cart->needs_shipping()) : ?>
+			<div class="flex justify-between flex-col gap-2">
+				<span class="text-base md:text-xl !font-medium text-cynBlack/80"><?php _e('حمل و نقل', 'taghechian') ?></span>
+				<span class="text-base !font-medium text-cynBlack/80"><?php wc_cart_totals_shipping_html(); ?></span>
+			</div>
+		<?php endif; ?>
+
+		<?php if (WC()->cart->get_discount_total() > 0): ?>
+			<div class="h-px w-full bg-cynBlack/10 my-1"></div>
+
+			<!-- مقدار تخفیف -->
+			<div class="flex justify-between items-center">
+				<div class="flex gap-2 items-center">
+
+					<span class="text-lg !font-medium text-[#C11B44]">
+						<?php _e('مقدار تخفیف', 'taghechian') ?>
+					</span>
+
+					<span class="text-[#C11B44] text-sm flex delete-coupon-code cursor-pointer">
+						<i class="size-5">
+							<?php Icon::print('trash-delete-bin-2-1'); ?>
+						</i>
+						<?php _e('حذف') ?>
+					</span>
+
+				</div>
+				<span class="text-[#C11B44] text-xl [&_span]:!font-medium">
+					<?php echo wc_price(WC()->cart->get_discount_total()); ?>
+				</span>
+			</div>
 
 		<?php endif; ?>
 
-		<?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
-			<tr class="fee">
-				<th><?php echo esc_html( $fee->name ); ?></th>
-				<td><?php wc_cart_totals_fee_html( $fee ); ?></td>
-			</tr>
-		<?php endforeach; ?>
+		<div class="h-px w-full bg-cynBlack/10 my-1"></div>
 
-		<?php if ( wc_tax_enabled() && ! WC()->cart->display_prices_including_tax() ) : ?>
-			<?php if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
-				<?php foreach ( WC()->cart->get_tax_totals() as $code => $tax ) : // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited ?>
-					<tr class="tax-rate tax-rate-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
-						<th><?php echo esc_html( $tax->label ); ?></th>
-						<td><?php echo wp_kses_post( $tax->formatted_amount ); ?></td>
-					</tr>
-				<?php endforeach; ?>
-			<?php else : ?>
-				<tr class="tax-total">
-					<th><?php echo esc_html( WC()->countries->tax_or_vat() ); ?></th>
-					<td><?php wc_cart_totals_taxes_total_html(); ?></td>
-				</tr>
-			<?php endif; ?>
-		<?php endif; ?>
+		<!-- مبلغ نهایی -->
+		<div class="flex justify-between items-center">
+			<span class="text-xl !font-medium text-cynBlack/80"><?php _e('قابل پرداخت', 'taghechian') ?></span>
+			<span class="text-cynBlue/80 text-2xl [&_span]:!font-medium">
+				<?php wc_cart_totals_order_total_html(); ?>
+			</span>
+		</div>
 
-		<?php do_action( 'woocommerce_review_order_before_order_total' ); ?>
+	</div>
 
-		<tr class="order-total">
-			<th><?php esc_html_e( 'Total', 'woocommerce' ); ?></th>
-			<td><?php wc_cart_totals_order_total_html(); ?></td>
-		</tr>
+	<!-- کد تخفیف -->
+	<div class="coupon_code_loader flex flex-col gap-4 border border-cynBlack/10 rounded-2xl p-4 md:p-6">
 
-		<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+		<div class="flex items-center gap-2">
 
-	</tfoot>
-</table>
+			<i class="text-cynYellow size-6">
+				<?php Icon::print('Gift,-Box-1'); ?>
+			</i>
+
+			<span class="text-base md:text-xl font-medium text-cynBlack/80">
+				<?php _e('کد تخفیف', 'taghechian') ?>
+			</span>
+
+		</div>
+
+		<div class="flex gap-2">
+
+			<input
+				type="text"
+				name="coupon_code"
+				class="coupon_code flex-1 border border-gray-300 rounded-full px-5 py-3 text-sm"
+				placeholder="<?php esc_attr_e('کد تخفیف خود را وارد کنید', 'taghechian'); ?>" />
+
+			<button
+				type="button"
+				name="apply_coupon"
+				value="1"
+				class="apply-coupon-btn primary-btn rounded-full px-8 py-3">
+				<?php _e('اعمال کد', 'taghechian'); ?>
+			</button>
+
+		</div>
+
+		<div class="coupon_code_response text-base font-medium">
+
+		</div>
+
+	</div>
+
+</div>

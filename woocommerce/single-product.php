@@ -247,7 +247,7 @@ get_header();
 				<p class="text-cynBlack text-xl font-medium">
 					<?php _e('قیمت', 'taghechian'); ?>
 				</p>
-				<p class="text-cynBlack text-xl font-medium transition-all duration-300" id="product-price-display">
+				<p class="text-cynBlack text-xl font-medium transition-all duration-300 [&_span.price]:flex [&_span.price]:flex-col [&_del]:font-medium [&_del]:text-base [&_ins]:text-[#DD4A4A]" id="product-price-display">
 					<?php
 					// Check stock status
 					if (!$is_in_stock) {

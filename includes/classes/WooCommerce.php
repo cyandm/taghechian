@@ -77,6 +77,10 @@ class WooCommerce
         add_action('wp_head', [__CLASS__, 'addCartAjaxParams']);
         add_action('wp_ajax_update_cart_quantity', [__CLASS__, 'ajaxUpdateCartQuantity']);
         add_action('wp_ajax_nopriv_update_cart_quantity', [__CLASS__, 'ajaxUpdateCartQuantity']);
+
+        // Delete coupon AJAX
+        add_action('wp_ajax_delete_coupon_code', [__CLASS__, 'ajaxDeleteCoupon']);
+        add_action('wp_ajax_nopriv_delete_coupon_code', [__CLASS__, 'ajaxDeleteCoupon']);
     }
 
     /**
@@ -148,8 +152,6 @@ class WooCommerce
 
         wp_send_json_success($response);
     }
-
-    // ... بقیه متدهای کلاس بدون تغییر ...
 
     /**
      * Products per page on shop archive (enables pagination when more than one page).
@@ -536,27 +538,42 @@ class WooCommerce
     public static function removeCheckoutFields($fields)
     {
         $fields_to_remove = [
-            'billing_address_1',
             'billing_address_2',
-            'billing_city',
-            'billing_state',
-            'billing_email',
         ];
 
         foreach ($fields_to_remove as $field_key) {
             if (isset($fields['billing'][$field_key])) {
                 $fields['billing'][$field_key]['required'] = false;
-            }
-        }
-
-        foreach ($fields_to_remove as $field_key) {
-            if (isset($fields['billing'][$field_key])) {
                 unset($fields['billing'][$field_key]);
             }
         }
 
+        if (isset($fields['billing']['billing_email'])) {
+            $fields['billing']['billing_email']['required'] = false;
+
+            $fields['billing']['billing_email']['class'][] = 'hidden';
+
+            $fields['billing']['billing_email']['label'] = '';
+            $fields['billing']['billing_email']['placeholder'] = '';
+        }
+
+        add_filter('woocommerce_checkout_fields', function ($fields) {
+
+            $fields['billing']['billing_country']['default'] = 'IR';
+            $fields['billing']['billing_country']['class'][] = 'hidden';
+
+            return $fields;
+        });
+
+        remove_action(
+            'woocommerce_before_checkout_form',
+            'woocommerce_checkout_coupon_form',
+            10
+        );
+
         return $fields;
     }
+
 
     /**
      * Make phone field required
@@ -589,9 +606,21 @@ class WooCommerce
             $fields['billing']['billing_last_name']['placeholder'] = __('نام خانوادگی', 'taghechian');
         }
 
-        if (isset($fields['billing']['billing_phone'])) {
-            $fields['billing']['billing_phone']['placeholder'] = __('شماره تلفن', 'taghechian');
+        if (isset($fields['billing']['billing_city'])) {
+            $fields['billing']['billing_city']['placeholder'] = __('نام شهر خود را وارد کنید', 'taghechian');
         }
+
+        if (isset($fields['billing']['billing_postcode'])) {
+            $fields['billing']['billing_postcode']['placeholder'] = __('کد پستی ده رقمی را وارد کنید', 'taghechian');
+        }
+
+        if (isset($fields['billing']['billing_phone'])) {
+            $fields['billing']['billing_phone']['placeholder'] = __('09xxxxxxxxxx', 'taghechian');
+        }
+
+        $fields['order']['order_comments']['custom_attributes'] = [
+            'rows' => 4,
+        ];
 
         return $fields;
     }
@@ -673,6 +702,27 @@ class WooCommerce
         }
         return $err;
     }
+
+    public static function ajaxDeleteCoupon()
+    {
+        // اعتبارسنجی nonce (اختیاری)
+        if (isset($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'delete_coupon_nonce')) {
+            wp_send_json_error(['message' => 'خطای امنیتی']);
+            return;
+        }
+
+        // حذف همه کوپن‌ها
+        foreach (WC()->cart->get_applied_coupons() as $code) {
+            WC()->cart->remove_coupon($code);
+        }
+
+        WC()->cart->calculate_totals();
+
+        wp_send_json_success([
+            'message' => __('کد تخفیف با موفقیت حذف شد.', 'taghechian')
+        ]);
+    }
+
 
     /**
      * Remove WooCommerce breadcrumb
