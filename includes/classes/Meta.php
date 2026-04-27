@@ -25,6 +25,9 @@ class Meta
         add_action('manage_contact_form_posts_custom_column', [__CLASS__, 'form_table_column'], 10, 2);
         add_filter('manage_order_form_posts_columns', [__CLASS__, 'order_form_table_head']);
         add_action('manage_order_form_posts_custom_column', [__CLASS__, 'order_form_table_column'], 10, 2);
+        add_action('add_meta_boxes', [__CLASS__, 'add_support_form_meta_box']);
+        add_filter('manage_support_form_posts_columns', [__CLASS__, 'support_form_table_head']);
+        add_action('manage_support_form_posts_custom_column', [__CLASS__, 'support_form_table_column'], 10, 2);
         add_action('load-post.php', [__CLASS__, 'markCurrentPostAsRead']);
         add_action('admin_menu', [__CLASS__, 'addUnreadCountToMenu'], 999);
     }
@@ -134,6 +137,44 @@ class Meta
             echo esc_html(get_post_meta($post_id, '_phone', true));
         }
     }
+
+    public static function add_support_form_meta_box()
+    {
+        global $post;
+        if ($post->post_type !== 'support_form') {
+            return;
+        }
+        add_meta_box('support_form_information', __('اطلاعات فرم پشتیبانی', 'taghechian'), function () {
+            $meta_group = [
+                ['name' => '_name', 'label' => __('نام', 'taghechian')],
+                ['name' => '_phone', 'label' => __('شماره تماس', 'taghechian')],
+                ['name' => '_message', 'label' => __('پیام', 'taghechian')],
+            ];
+            include get_template_directory() . '/partials/parts/metabox.php';
+        }, null, 'advanced', 'high');
+    }
+
+    public static function support_form_table_head($columns)
+    {
+        $columns['name'] = __('نام', 'taghechian');
+        $columns['phone'] = __('شماره تماس', 'taghechian');
+        $columns['message'] = __('پیام', 'taghechian');
+        return $columns;
+    }
+
+    public static function support_form_table_column($column_name, $post_id)
+    {
+        if ($column_name === 'name') {
+            echo esc_html(get_post_meta($post_id, '_name', true));
+        }
+        if ($column_name === 'phone') {
+            echo esc_html(get_post_meta($post_id, '_phone', true));
+        }
+        if ($column_name === 'message') {
+            echo esc_html(get_post_meta($post_id, '_message', true));
+        }
+    }
+
 
     /**
      * Mark current post as read when admin opens it (for post types in unread_badge_config).

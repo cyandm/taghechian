@@ -3737,12 +3737,55 @@
     devLog("Modal function is running");
     const popupBackdrop = document.querySelector("[modal-backdrop]");
     const modals = document.querySelectorAll("[modal]");
+    const discardSnapshots = /* @__PURE__ */ new WeakMap();
+    const isDiscardOnCloseEnabled = (modal) => {
+      var _a;
+      return ((_a = modal == null ? void 0 : modal.dataset) == null ? void 0 : _a.modalDiscardOnClose) === "true";
+    };
+    const getDiscardableFields = (modal) => modal.querySelectorAll("input, textarea, select");
+    const captureDiscardSnapshot = (modal) => {
+      if (!isDiscardOnCloseEnabled(modal)) {
+        return;
+      }
+      const snapshot = [];
+      getDiscardableFields(modal).forEach((field) => {
+        const fieldType = field.type ? field.type.toLowerCase() : "";
+        if (fieldType === "checkbox" || fieldType === "radio") {
+          snapshot.push({ field, checked: field.checked });
+          return;
+        }
+        snapshot.push({ field, value: field.value });
+      });
+      discardSnapshots.set(modal, snapshot);
+    };
+    const restoreDiscardSnapshot = (modal) => {
+      if (!isDiscardOnCloseEnabled(modal)) {
+        return;
+      }
+      const snapshot = discardSnapshots.get(modal);
+      if (!snapshot || !Array.isArray(snapshot)) {
+        return;
+      }
+      snapshot.forEach((entry) => {
+        if (!(entry == null ? void 0 : entry.field)) {
+          return;
+        }
+        if (typeof entry.checked === "boolean") {
+          entry.field.checked = entry.checked;
+          return;
+        }
+        if (typeof entry.value !== "undefined") {
+          entry.field.value = entry.value;
+        }
+      });
+    };
     if (!popupBackdrop) {
       devLog("Modal backdrop not found. Skipping backdrop click handler.");
     } else {
       popupBackdrop.addEventListener("click", (e10) => {
         e10.stopPropagation();
         modals.forEach((modal) => {
+          restoreDiscardSnapshot(modal);
           modal.dataset.active = "false";
           document.body.style.overflow = "auto";
           modal.dispatchEvent(
@@ -3765,6 +3808,11 @@
         return;
       }
       modals2.forEach((modal) => {
+        if (state === "true") {
+          captureDiscardSnapshot(modal);
+        } else {
+          restoreDiscardSnapshot(modal);
+        }
         modal.dataset.active = state;
         if (state === "true") {
           document.body.style.overflow = "hidden";
@@ -26113,6 +26161,37 @@
     });
   }
 
+  // assets/js/functions/wishlist.js
+  function Wishlist() {
+    const guestHeartButtons = document.querySelectorAll(".wishlist-heart-guest");
+    if (!guestHeartButtons.length) {
+      return;
+    }
+    const loginRequiredModalName = "login-required-modal";
+    const loginRequiredModal = document.querySelector(
+      '[modal][data-modal-name="'.concat(loginRequiredModalName, '"]')
+    );
+    const modalBackdrop = document.querySelector("[modal-backdrop]");
+    const loginLink = document.querySelector("#wishlist-login-required-link");
+    const currentUrl = window.location.href;
+    if (loginLink instanceof HTMLAnchorElement) {
+      loginLink.href = "/my-account/?redirect_to=".concat(encodeURIComponent(currentUrl));
+    }
+    guestHeartButtons.forEach((button) => {
+      button.addEventListener("click", (event2) => {
+        event2.preventDefault();
+        if (!loginRequiredModal) {
+          return;
+        }
+        loginRequiredModal.setAttribute("data-active", "true");
+        document.body.style.overflow = "hidden";
+        if (modalBackdrop) {
+          modalBackdrop.setAttribute("data-active", "true");
+        }
+      });
+    });
+  }
+
   // assets/js/index.js
   Modals();
   register();
@@ -26132,6 +26211,7 @@
   ProductVariation();
   ProductReviews();
   CartPage();
+  Wishlist();
 })();
 /*! Bundled license information:
 

@@ -25,6 +25,7 @@ class Rest
 	{
 		self::makeRoute('/contact_form', 'POST', [__CLASS__, 'createForm']);
 		self::makeRoute('/order_form', 'POST', [__CLASS__, 'createOrderForm']);
+		self::makeRoute('/support_form', 'POST', [__CLASS__, 'createSupportForm']);
 	}
 
 	public static function createForm(WP_REST_Request $request)
@@ -146,6 +147,68 @@ class Rest
 				'_product_type' => $product_type,
 				'_quantity' => $quantity,
 				'_phone' => $phone,
+			]
+		]);
+
+		if (is_wp_error($new_post)) {
+			return new WP_REST_Response(['error' => __('خطا در ثبت فرم، لطفاً دوباره تلاش کنید', 'taghechian')], 500);
+		}
+
+		set_transient($rate_key, time(), $min_interval);
+		$count_data['count']++;
+		set_transient($count_key, $count_data, 3600);
+
+		return new WP_REST_Response(['message' => __('فرم با موفقیت ارسال شد', 'taghechian')], 200);
+	}
+
+	public static function createSupportForm(WP_REST_Request $request)
+	{
+		$ip = self::getClientIp();
+
+		$min_interval = 120;
+		$rate_key = 'cyn_support_last_' . md5($ip);
+		$last_time = get_transient($rate_key);
+		if ($last_time !== false && (time() - $last_time) < $min_interval) {
+			$wait = $min_interval - (time() - $last_time);
+			return new WP_REST_Response([
+				'error' => sprintf(__('لطفاً %d ثانیه صبر کنید و دوباره تلاش کنید.', 'taghechian'), $wait)
+			], 429);
+		}
+
+		$max_per_hour = 2;
+		$count_key = 'cyn_support_count_' . md5($ip);
+		$count_data = get_transient($count_key);
+		if ($count_data === false) {
+			$count_data = ['count' => 0, 'start' => time()];
+		}
+		if ($count_data['count'] >= $max_per_hour) {
+			return new WP_REST_Response([
+				'error' => __('تعداد ارسال‌های شما در این ساعت به حد مجاز رسیده. لطفاً بعداً تلاش کنید.', 'taghechian')
+			], 429);
+		}
+
+		$body = $request->get_body_params();
+
+		$name = isset($body['name']) ? sanitize_text_field($body['name']) : '';
+		$phone = isset($body['phone']) ? sanitize_text_field($body['phone']) : '';
+		$message = isset($body['message']) ? sanitize_textarea_field($body['message']) : '';
+
+		if ($name === '' || $phone === '' || $message === '') {
+			return new WP_REST_Response(['error' => __('تمام فیلدها الزامی هستند', 'taghechian')], 400);
+		}
+
+		if (!preg_match('/^[0-9]{11}$/', $phone)) {
+			return new WP_REST_Response(['error' => __('شماره تلفن معتبر نیست', 'taghechian')], 400);
+		}
+
+		$new_post = wp_insert_post([
+			'post_type' => 'support_form',
+			'post_title' => $name,
+			'post_status' => 'private',
+			'meta_input' => [
+				'_name' => $name,
+				'_phone' => $phone,
+				'_message' => $message,
 			]
 		]);
 

@@ -63,6 +63,7 @@ class Register
 		self::makePostType('branch', 'شعبه', 'شعبه ها', 'dashicons-store', ['title', 'thumbnail']);
 		self::makePostType('contact_form', 'فرم تماس با ما', 'فرم تماس با ما', 'dashicons-phone', ['title']);
 		self::makePostType('order_form', 'فرم سفارش', 'فرم سفارش', 'dashicons-cart', ['title']);
+		self::makePostType('support_form', 'فرم پشتیبانی', 'فرم پشتیبانی', 'dashicons-sos', ['title']);
 		self::makePostType('faq', 'سوالات متداول', 'سوالات متداول', 'dashicons-editor-help', ['title', 'editor']);
 		self::makePostType('slider', 'اسلایدر', 'اسلایدر', 'dashicons-images-alt2', ['title']);
 	}

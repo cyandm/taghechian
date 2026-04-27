@@ -21,6 +21,7 @@ import { Countdown } from "./modules/countdown";
 import { ProductVariation } from "./functions/productVariation.js";
 import { ProductReviews } from "./functions/productReviews.js";
 import { CartPage } from "./functions/cart";
+import { Wishlist } from "./functions/wishlist";
 
 Modals();
 register();
@@ -41,3 +42,4 @@ Countdown();
 ProductVariation();
 ProductReviews();
 CartPage();
+Wishlist();

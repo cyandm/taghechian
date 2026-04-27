@@ -13,12 +13,16 @@ if (!defined('ABSPATH')) {
 
 use Cyan\Theme\Helpers\Templates;
 use Cyan\Theme\Helpers\Icon;
+use Cyan\Theme\Classes\WooCommerce as ThemeWooCommerce;
 
 global $product;
 
 if (!$product) {
     $product = wc_get_product(get_the_ID());
 }
+
+$wishlist_is_liked = ThemeWooCommerce::isProductInCurrentUserWishlist($product->get_id());
+$wishlist_toggle_url = ThemeWooCommerce::getWishlistToggleUrl($product->get_id());
 
 get_header(); ?>
 
@@ -161,9 +165,21 @@ get_header(); ?>
                             <i class="size-6 stroke-[1.5]"><?php Icon::print('Messages,-Chat-18'); ?></i>
                         </a>
 
-                        <button type="button" class="rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('علاقه‌مندی', 'taghechian')); ?>">
-                            <i class="size-6 stroke-[1.5]"><?php Icon::print('Heart'); ?></i>
-                        </button>
+                        <?php if (is_user_logged_in()) : ?>
+                            <a href="<?php echo esc_url($wishlist_toggle_url); ?>" class="wishlist-heart-btn rounded-full border flex items-center justify-center transition-all duration-300 p-3 <?php echo $wishlist_is_liked ? 'is-liked border-[#cf255d] bg-[#cf255d] text-white hover:bg-[#b91f53] hover:border-[#b91f53]' : 'border-cynBlack/10 text-cynBlack hover:border-cynYellow hover:bg-cynYellow'; ?>" aria-label="<?php echo esc_attr(__('علاقه‌مندی', 'taghechian')); ?>" aria-pressed="<?php echo $wishlist_is_liked ? 'true' : 'false'; ?>">
+                                <?php if ($wishlist_is_liked) : ?>
+                                    <svg class="size-5" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path fill="currentColor" d="M3.172 5.172a4 4 0 0 1 5.656 0L10 6.343l1.172-1.171a4 4 0 1 1 5.656 5.656L10 17.657l-6.828-6.829a4 4 0 0 1 0-5.656z" />
+                                    </svg>
+                                <?php else : ?>
+                                    <i class="size-6 stroke-[1.5]"><?php Icon::print('Heart'); ?></i>
+                                <?php endif; ?>
+                            </a>
+                        <?php else : ?>
+                            <button type="button" class="wishlist-heart-btn wishlist-heart-guest rounded-full border border-cynBlack/10 flex items-center justify-center text-cynBlack hover:border-cynYellow hover:bg-cynYellow transition-all duration-300 p-3" aria-label="<?php echo esc_attr(__('علاقه‌مندی', 'taghechian')); ?>">
+                                <i class="size-6 stroke-[1.5]"><?php Icon::print('Heart'); ?></i>
+                            </button>
+                        <?php endif; ?>
 
                     </div>
 

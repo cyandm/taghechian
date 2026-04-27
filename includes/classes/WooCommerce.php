@@ -12,6 +12,28 @@ use Cyan\Theme\Helpers\Templates;
 
 class WooCommerce
 {
+    /**
+     * User meta key used to persist wishlist product IDs.
+     *
+     * @var string
+     */
+    private const WISHLIST_META_KEY = '_cyn_wishlist_product_ids';
+
+    /**
+     * Query-string action for removing a product from wishlist.
+     *
+     * @var string
+     */
+    private const WISHLIST_REMOVE_ACTION = 'cyn_wishlist_remove';
+
+    /**
+     * Nonce action used for wishlist remove links.
+     *
+     * @var string
+     */
+    private const WISHLIST_REMOVE_NONCE_ACTION = 'cyn_wishlist_remove_item';
+    private const WISHLIST_TOGGLE_ACTION = 'cyn_wishlist_toggle';
+    private const WISHLIST_TOGGLE_NONCE_ACTION = 'cyn_wishlist_toggle_item';
 
     public static function init()
     {
@@ -66,6 +88,14 @@ class WooCommerce
 
         // Manual clear of variation cache: open product URL with ?wc_clear_variations=1 (admins) to fix wrong cached data
         add_action('template_redirect', [__CLASS__, 'maybeClearVariationsOnView'], 5);
+        add_action('template_redirect', [__CLASS__, 'redirectAccountAliasToMyAccount'], 1);
+        add_filter('wp_redirect', [__CLASS__, 'maybeRedirectAccountSaveToDashboard'], 10, 2);
+        add_action('init', [__CLASS__, 'registerAccountWishlistEndpoint']);
+        add_action('init', [__CLASS__, 'registerAccountSupportEndpoint']);
+        add_action('template_redirect', [__CLASS__, 'maybeHandleWishlistToggle'], 8);
+        add_action('template_redirect', [__CLASS__, 'maybeHandleWishlistRemove'], 9);
+        add_action('woocommerce_account_wishlist_endpoint', [__CLASS__, 'renderWishlistEndpointContent']);
+        add_action('woocommerce_account_support_endpoint', [__CLASS__, 'renderSupportEndpointContent']);
 
         add_action('wp_enqueue_scripts', function () {
             if (is_product()) {
@@ -266,6 +296,355 @@ class WooCommerce
             exit;
         }
     }
+
+    /**
+     * Redirect /account alias URLs to canonical /my-account URLs.
+     */
+    public static function redirectAccountAliasToMyAccount()
+    {
+        if (is_admin() || wp_doing_ajax() || wp_is_json_request()) {
+            return;
+        }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
+        if ($request_uri === '') {
+            return;
+        }
+
+        $parsed_url = wp_parse_url($request_uri);
+        $request_path = isset($parsed_url['path']) ? (string) $parsed_url['path'] : '';
+        if ($request_path === '') {
+            return;
+        }
+
+        $normalized_request_path = trim($request_path, '/');
+        if ($normalized_request_path === '' || strpos($normalized_request_path, 'account') !== 0) {
+            return;
+        }
+
+        $my_account_path = preg_replace('/^account\b/', 'my-account', $normalized_request_path);
+        $redirect_url = home_url('/' . ltrim((string) $my_account_path, '/') . '/');
+
+        if (isset($parsed_url['query']) && $parsed_url['query'] !== '') {
+            $redirect_url = $redirect_url . '?' . $parsed_url['query'];
+        }
+
+        wp_safe_redirect($redirect_url, 301);
+        exit;
+    }
+
+    /**
+     * Keep dashboard-origin account forms on the My Account page.
+     *
+     * WooCommerce redirects some account forms to dedicated endpoints by default.
+     * This only overrides those redirects when the submit came from dashboard UI forms.
+     *
+     * @param string $location Redirect destination.
+     * @param int    $status   Redirect status code.
+     * @return string
+     */
+    public static function maybeRedirectAccountSaveToDashboard($location, $status)
+    {
+        unset($status);
+
+        if (!is_string($location) || $location === '') {
+            return $location;
+        }
+
+        if (!is_account_page() || !is_user_logged_in()) {
+            return $location;
+        }
+
+        $posted_action = isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '';
+        $my_account_url = wc_get_page_permalink('myaccount');
+
+        if ($posted_action === 'save_account_details') {
+            $form_source = isset($_POST['cyn_account_form_source']) ? sanitize_text_field(wp_unslash($_POST['cyn_account_form_source'])) : '';
+            if ($form_source !== 'dashboard_names') {
+                return $location;
+            }
+
+            $edit_account_url = wc_get_endpoint_url('edit-account', '', $my_account_url);
+            if (untrailingslashit($location) !== untrailingslashit($edit_account_url)) {
+                return $location;
+            }
+
+            return $my_account_url;
+        }
+
+        if ($posted_action === 'edit_address') {
+            $form_source = isset($_POST['cyn_address_form_source']) ? sanitize_text_field(wp_unslash($_POST['cyn_address_form_source'])) : '';
+            if ($form_source !== 'dashboard_modal') {
+                return $location;
+            }
+
+            $edit_address_url = wc_get_endpoint_url('edit-address', '', $my_account_url);
+            if (untrailingslashit($location) !== untrailingslashit($edit_address_url)) {
+                return $location;
+            }
+
+            return $my_account_url;
+        }
+
+        return $location;
+    }
+
+    /**
+     * Register "wishlist" endpoint under My Account.
+     */
+    public static function registerAccountWishlistEndpoint()
+    {
+        add_rewrite_endpoint('wishlist', EP_ROOT | EP_PAGES);
+    }
+
+    /**
+     * Register "support" endpoint under My Account.
+     */
+    public static function registerAccountSupportEndpoint()
+    {
+        add_rewrite_endpoint('support', EP_ROOT | EP_PAGES);
+    }
+
+    /**
+     * Output wishlist endpoint content.
+     */
+    public static function renderWishlistEndpointContent()
+    {
+        wc_get_template('myaccount/wishlist.php');
+    }
+
+    /**
+     * Output support endpoint content.
+     */
+    public static function renderSupportEndpointContent()
+    {
+        wc_get_template('myaccount/support.php');
+    }
+
+    /**
+     * Return current user's normalized wishlist product IDs.
+     *
+     * @return int[]
+     */
+    public static function getCurrentUserWishlistProductIds()
+    {
+        $user_id = get_current_user_id();
+        if ($user_id <= 0) {
+            return [];
+        }
+
+        $stored = get_user_meta($user_id, self::WISHLIST_META_KEY, true);
+        if (! is_array($stored)) {
+            return [];
+        }
+
+        $wishlist_product_ids = array_values(array_unique(array_filter(array_map('absint', $stored))));
+
+        return $wishlist_product_ids;
+    }
+
+    /**
+     * Remove a product from current user's wishlist.
+     *
+     * @param int $product_id Product ID.
+     * @return bool
+     */
+    public static function removeProductFromCurrentUserWishlist($product_id)
+    {
+        $user_id = get_current_user_id();
+        if ($user_id <= 0 || $product_id <= 0) {
+            return false;
+        }
+
+        $wishlist_product_ids = self::getCurrentUserWishlistProductIds();
+        $updated_wishlist_ids = array_values(array_filter($wishlist_product_ids, static function ($wishlist_product_id) use ($product_id) {
+            return (int) $wishlist_product_id !== (int) $product_id;
+        }));
+
+        update_user_meta($user_id, self::WISHLIST_META_KEY, $updated_wishlist_ids);
+
+        return true;
+    }
+
+    /**
+     * Add a product to current user's wishlist.
+     *
+     * @param int $product_id Product ID.
+     * @return bool
+     */
+    public static function addProductToCurrentUserWishlist($product_id)
+    {
+        $user_id = get_current_user_id();
+        $product_id = absint($product_id);
+
+        if ($user_id <= 0 || $product_id <= 0) {
+            return false;
+        }
+
+        $product = wc_get_product($product_id);
+        if (! $product || ! $product->get_id()) {
+            return false;
+        }
+
+        $wishlist_product_ids = self::getCurrentUserWishlistProductIds();
+        if (! in_array($product_id, $wishlist_product_ids, true)) {
+            $wishlist_product_ids[] = $product_id;
+        }
+
+        $wishlist_product_ids = array_values(array_unique(array_filter(array_map('absint', $wishlist_product_ids))));
+        update_user_meta($user_id, self::WISHLIST_META_KEY, $wishlist_product_ids);
+
+        return true;
+    }
+
+    /**
+     * Check whether a product exists in current user's wishlist.
+     *
+     * @param int $product_id Product ID.
+     * @return bool
+     */
+    public static function isProductInCurrentUserWishlist($product_id)
+    {
+        $product_id = absint($product_id);
+        if ($product_id <= 0 || ! is_user_logged_in()) {
+            return false;
+        }
+
+        $wishlist_product_ids = self::getCurrentUserWishlistProductIds();
+
+        return in_array($product_id, $wishlist_product_ids, true);
+    }
+
+    /**
+     * Handle add/remove toggle action from single product page.
+     */
+    public static function maybeHandleWishlistToggle()
+    {
+        if (! isset($_GET[self::WISHLIST_TOGGLE_ACTION])) {
+            return;
+        }
+
+        $product_id = absint(wp_unslash($_GET[self::WISHLIST_TOGGLE_ACTION]));
+        $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+        $redirect_url = wp_get_referer();
+        if (! is_string($redirect_url) || $redirect_url === '') {
+            $redirect_url = $product_id > 0 ? get_permalink($product_id) : home_url('/');
+        }
+        $redirect_url = remove_query_arg([self::WISHLIST_TOGGLE_ACTION, '_wpnonce'], $redirect_url);
+
+        if (! is_user_logged_in()) {
+            wp_safe_redirect($redirect_url);
+            exit;
+        }
+
+        if ($product_id <= 0 || $nonce === '' || ! wp_verify_nonce($nonce, self::WISHLIST_TOGGLE_NONCE_ACTION . '_' . $product_id)) {
+            wc_add_notice(__('درخواست نامعتبر است. لطفاً دوباره تلاش کنید.', 'taghechian'), 'error');
+            wp_safe_redirect($redirect_url);
+            exit;
+        }
+
+        $is_liked = self::isProductInCurrentUserWishlist($product_id);
+        $result = $is_liked
+            ? self::removeProductFromCurrentUserWishlist($product_id)
+            : self::addProductToCurrentUserWishlist($product_id);
+
+        if (! $result) {
+            wc_add_notice(__('امکان بروزرسانی علاقه‌مندی وجود ندارد.', 'taghechian'), 'error');
+            wp_safe_redirect($redirect_url);
+            exit;
+        }
+
+        if ($is_liked) {
+            wc_add_notice(__('محصول از علاقه‌مندی‌ها حذف شد.', 'taghechian'), 'success');
+        } else {
+            wc_add_notice(__('محصول به علاقه‌مندی‌ها اضافه شد.', 'taghechian'), 'success');
+        }
+
+        wp_safe_redirect($redirect_url);
+        exit;
+    }
+
+    /**
+     * Handle secure remove action from My Account wishlist page.
+     */
+    public static function maybeHandleWishlistRemove()
+    {
+        if (! is_user_logged_in() || ! is_account_page()) {
+            return;
+        }
+
+        if (! isset($_GET[self::WISHLIST_REMOVE_ACTION])) {
+            return;
+        }
+
+        $product_id = isset($_GET[self::WISHLIST_REMOVE_ACTION]) ? absint(wp_unslash($_GET[self::WISHLIST_REMOVE_ACTION])) : 0;
+        $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+        $wishlist_url = wc_get_account_endpoint_url('wishlist');
+
+        if ($product_id <= 0 || $nonce === '' || ! wp_verify_nonce($nonce, self::WISHLIST_REMOVE_NONCE_ACTION . '_' . $product_id)) {
+            wc_add_notice(__('درخواست نامعتبر است. لطفاً دوباره تلاش کنید.', 'taghechian'), 'error');
+            wp_safe_redirect($wishlist_url);
+            exit;
+        }
+
+        $removed = self::removeProductFromCurrentUserWishlist($product_id);
+        if (! $removed) {
+            wc_add_notice(__('امکان حذف محصول از علاقه‌مندی‌ها وجود ندارد.', 'taghechian'), 'error');
+            wp_safe_redirect($wishlist_url);
+            exit;
+        }
+
+        wc_add_notice(__('محصول از علاقه‌مندی‌ها حذف شد.', 'taghechian'), 'success');
+        wp_safe_redirect($wishlist_url);
+        exit;
+    }
+
+    /**
+     * Build secure remove URL for a wishlist product.
+     *
+     * @param int $product_id Product ID.
+     * @return string
+     */
+    public static function getWishlistRemoveUrl($product_id)
+    {
+        $product_id = absint($product_id);
+        if ($product_id <= 0) {
+            return '';
+        }
+
+        $url = add_query_arg(
+            [
+                self::WISHLIST_REMOVE_ACTION => $product_id,
+            ],
+            wc_get_account_endpoint_url('wishlist')
+        );
+
+        return wp_nonce_url($url, self::WISHLIST_REMOVE_NONCE_ACTION . '_' . $product_id);
+    }
+
+    /**
+     * Build secure toggle URL for single-product wishlist button.
+     *
+     * @param int $product_id Product ID.
+     * @return string
+     */
+    public static function getWishlistToggleUrl($product_id)
+    {
+        $product_id = absint($product_id);
+        if ($product_id <= 0) {
+            return '';
+        }
+
+        $url = add_query_arg(
+            [
+                self::WISHLIST_TOGGLE_ACTION => $product_id,
+            ],
+            get_permalink($product_id)
+        );
+
+        return wp_nonce_url($url, self::WISHLIST_TOGGLE_NONCE_ACTION . '_' . $product_id);
+    }
+
 
     /**
      * Register shop sidebar for widgets (Appearance > Widgets).

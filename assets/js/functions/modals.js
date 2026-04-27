@@ -34,6 +34,58 @@ export function Modals() {
   devLog("Modal function is running");
   const popupBackdrop = document.querySelector("[modal-backdrop]");
   const modals = document.querySelectorAll("[modal]");
+  const discardSnapshots = new WeakMap();
+
+  const isDiscardOnCloseEnabled = (modal) =>
+    modal?.dataset?.modalDiscardOnClose === "true";
+
+  const getDiscardableFields = (modal) =>
+    modal.querySelectorAll("input, textarea, select");
+
+  const captureDiscardSnapshot = (modal) => {
+    if (!isDiscardOnCloseEnabled(modal)) {
+      return;
+    }
+
+    const snapshot = [];
+    getDiscardableFields(modal).forEach((field) => {
+      const fieldType = field.type ? field.type.toLowerCase() : "";
+      if (fieldType === "checkbox" || fieldType === "radio") {
+        snapshot.push({ field, checked: field.checked });
+        return;
+      }
+
+      snapshot.push({ field, value: field.value });
+    });
+
+    discardSnapshots.set(modal, snapshot);
+  };
+
+  const restoreDiscardSnapshot = (modal) => {
+    if (!isDiscardOnCloseEnabled(modal)) {
+      return;
+    }
+
+    const snapshot = discardSnapshots.get(modal);
+    if (!snapshot || !Array.isArray(snapshot)) {
+      return;
+    }
+
+    snapshot.forEach((entry) => {
+      if (!entry?.field) {
+        return;
+      }
+
+      if (typeof entry.checked === "boolean") {
+        entry.field.checked = entry.checked;
+        return;
+      }
+
+      if (typeof entry.value !== "undefined") {
+        entry.field.value = entry.value;
+      }
+    });
+  };
 
   if (!popupBackdrop) {
     devLog("Modal backdrop not found. Skipping backdrop click handler.");
@@ -41,6 +93,7 @@ export function Modals() {
     popupBackdrop.addEventListener("click", (e) => {
       e.stopPropagation();
       modals.forEach((modal) => {
+        restoreDiscardSnapshot(modal);
         modal.dataset.active = "false";
         document.body.style.overflow = "auto";
 
@@ -49,7 +102,7 @@ export function Modals() {
             detail: {
               handler: popupBackdrop,
             },
-          })
+          }),
         );
       });
       popupBackdrop.dataset.active = "false";
@@ -65,7 +118,7 @@ export function Modals() {
    */
   const handleModalState = (modalName, state) => {
     const modals = document.querySelectorAll(
-      `[modal][data-modal-name="${modalName}"]`
+      `[modal][data-modal-name="${modalName}"]`,
     );
     if (!modals) {
       devLog(`Modal "${modalName}" not found.`);
@@ -73,6 +126,12 @@ export function Modals() {
     }
 
     modals.forEach((modal) => {
+      if (state === "true") {
+        captureDiscardSnapshot(modal);
+      } else {
+        restoreDiscardSnapshot(modal);
+      }
+
       modal.dataset.active = state;
 
       if (state === "true") {
@@ -104,7 +163,7 @@ export function Modals() {
     elements.forEach((element) => {
       const modalName = element.dataset.modalName;
       const modal = document.querySelector(
-        `[modal][data-modal-name="${modalName}"]`
+        `[modal][data-modal-name="${modalName}"]`,
       );
 
       element.addEventListener("click", () => {
@@ -116,7 +175,7 @@ export function Modals() {
               detail: {
                 handler: element,
               },
-            })
+            }),
           );
         }
       });
@@ -131,14 +190,14 @@ export function Modals() {
   addEventListeners(
     "[modal-opener]",
     (modalName) => handleModalState(modalName, "true"),
-    "Open"
+    "Open",
   );
 
   // Close modals
   addEventListeners(
     "[modal-closer]",
     (modalName) => handleModalState(modalName, "false"),
-    "Close"
+    "Close",
   );
 
   // Toggle modals
@@ -146,7 +205,7 @@ export function Modals() {
     "[modal-toggler]",
     (modalName) => {
       const modal = document.querySelector(
-        `[modal][data-modal-name="${modalName}"]`
+        `[modal][data-modal-name="${modalName}"]`,
       );
 
       if (!modal) {
@@ -158,6 +217,6 @@ export function Modals() {
       devLog(`Toggling modal "${modalName}" to "${newState}".`);
       handleModalState(modalName, newState);
     },
-    "Toggle"
+    "Toggle",
   );
 }

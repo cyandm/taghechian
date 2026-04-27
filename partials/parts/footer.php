@@ -395,3 +395,21 @@ for ($i = 1; $i <= 4; $i++) {
 </section>
 
 <?php Templates::getPart('navbar-mobile'); ?>
+
+<div class="container flex justify-center items-center h-fit top-1/2 -translate-y-1/2 fixed inset-0 z-50 opacity-0 pointer-events-none w-full md:!w-4/10 data-[active='true']:opacity-100 data-[active='true']:pointer-events-auto duration-500" modal data-modal-name="login-required-modal" data-active="false">
+    <div class="w-full px-6 pb-6 pt-8 bg-cynWhite rounded-3xl shadow-item flex flex-col gap-6 justify-center items-center relative border border-cynBlack/10">
+        <div class="absolute top-3 right-3 w-fit cursor-pointer flex items-center" modal-closer data-modal-name="login-required-modal">
+            <i class="size-8 text-cynBlack"><?php Icon::print('Delete,-Disabled'); ?></i>
+            <span class="text-xs font-semibold pb-0.5"><?php _e('بستن', 'taghechian'); ?></span>
+        </div>
+
+        <div class="flex flex-col gap-3 text-cynBlack w-full text-center">
+            <p class="text-2xl font-normal"><?php _e('نیاز به ورود', 'taghechian'); ?></p>
+            <p class="text-sm text-cynBlack/70"><?php _e('برای افزودن محصول به علاقه‌مندی‌ها ابتدا وارد حساب کاربری خود شوید.', 'taghechian'); ?></p>
+        </div>
+
+        <a id="wishlist-login-required-link" href="<?php echo esc_url(wp_login_url(home_url('/my-account/'))); ?>" class="primary-btn w-full text-center flex items-center justify-center">
+            <?php _e('ورود / ثبت نام', 'taghechian'); ?>
+        </a>
+    </div>
+</div>
